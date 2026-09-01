@@ -8,7 +8,6 @@ import FinalCTA from '../../components/sections/FinalCTA.astro';
 import FAQSection from '../../components/sections/FAQSection.astro';
 import Container from '../../components/ui/Container.astro';
 import Icon from '../../components/ui/Icon.astro';
-import type { ImageMetadata } from 'astro';
 import { serviceCategories, servicesByCategory } from '../../data/services';
 import { featuredServiceAreas } from '../../data/locations';
 import { categoryFaqs, generalFaqs } from '../../data/faqs';
@@ -25,11 +24,12 @@ export function getStaticPaths() {
 const { cat } = Astro.props;
 const categoryServices = servicesByCategory(cat.slug);
 
-// cat.heroImage is a real photo filename (see src/data/services.ts); resolve
-// it to an actual ImageMetadata via a static glob, the same pattern
-// Icon.astro uses to resolve name-keyed assets.
-const photoModules = import.meta.glob<{ default: ImageMetadata }>('../../assets/photos/*', { eager: true });
-const heroImage = Object.entries(photoModules).find(([path]) => path.endsWith(`/${cat.heroImage}`))?.[1].default;
+// cat.heroImage (see src/data/services.ts) is intentionally not rendered as
+// a full-bleed background here: none of the scraped source photos are wide
+// enough (all under 1300px) to stay sharp stretched across a hero section
+// at typical desktop widths, they'd look visibly soft. Left as documented,
+// unused data rather than wired in, until a genuinely high-res replacement
+// exists.
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -53,8 +53,6 @@ const schema = [breadcrumbListSchema(breadcrumbs, siteUrl), faqPageSchema(faqs)]
     title={`${cat.name} Services`}
     description={cat.description}
     breadcrumbs={breadcrumbs}
-    image={heroImage}
-    imageAlt={`Sunset Heating & Cooling ${cat.name.toLowerCase()} service`}
   />
 
   <section class="py-16">

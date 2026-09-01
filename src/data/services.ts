@@ -48,7 +48,6 @@ export interface ServiceCategory {
   warningSigns?: string[];
   commonProblems?: string[];
   icon: IconName;
-  heroImage: string;
 }
 
 export const serviceCategories: ServiceCategory[] = [
@@ -69,7 +68,6 @@ export const serviceCategories: ServiceCategory[] = [
       'Poor indoor air quality',
     ],
     icon: 'heating',
-    heroImage: 'sunset-hvac-electrical-plumbing-feat-01.webp',
   },
   {
     slug: 'air-conditioning',
@@ -93,7 +91,6 @@ export const serviceCategories: ServiceCategory[] = [
       'Water or refrigerant leaks',
     ],
     icon: 'ac',
-    heroImage: 'home-page-bg-scaled-crop-e1686077375645.webp',
   },
   {
     slug: 'plumbing',
@@ -101,7 +98,6 @@ export const serviceCategories: ServiceCategory[] = [
     description: 'Water heaters, drain & sewer service, repiping, remodeling, and leak detection from a flat-rate, licensed plumbing team.',
     intro: 'Plumbing work is never a good idea for the novice Portland, OR homeowner. Water runs through quite a bit of the appliances, fixtures, and systems in your home, and a mistake can mean costly damage to pipes, fixtures, and the home itself, plus the risk of water damage and mold. Sunset is staffed by experienced, qualified plumbers offering premium plumbing services, from routine drain cleaning and water heater replacement to sewer line repair, repiping, and full bathroom or kitchen remodels, all with upfront flat-rate pricing and a promise of 100% satisfaction on every project.',
     icon: 'plumbing',
-    heroImage: 'collapsed-old-sewer-pipe.jpg.webp',
   },
   {
     slug: 'electrical',
@@ -116,7 +112,6 @@ export const serviceCategories: ServiceCategory[] = [
       'Burning or metallic odors near the panel',
     ],
     icon: 'electrical',
-    heroImage: 'image-22.jpg.webp',
   },
 ];
 
