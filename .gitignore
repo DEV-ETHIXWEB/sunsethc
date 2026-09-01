@@ -1,0 +1,31 @@
+# build output
+dist/
+.vercel/
+.astro/
+
+# QA snapshot artifact
+.redirects-snapshot.json
+
+# dependencies
+node_modules/
+
+# environment variables
+.env
+.env.production
+
+# macOS
+.DS_Store
+
+# logs
+npm-debug.log*
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+
+# Internal working materials, source assets and reference docs, not part of
+# the deployable site (icons/photos are already extracted into src/assets/).
+/Sunset/
+/Heating, Cooling & Electrical Services in Portland, OR _ Sunset/
+/MY SKILLS _AKASH/

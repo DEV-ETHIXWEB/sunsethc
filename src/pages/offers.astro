@@ -1,0 +1,72 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import Container from '../components/ui/Container.astro';
+import { offers } from '../data/offers';
+import { business } from '../data/business';
+import { siteUrl } from '../data/site';
+import { breadcrumbListSchema } from '../lib/seo';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Offers', url: '/offers' },
+];
+const schema = breadcrumbListSchema(breadcrumbs, siteUrl);
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Coupons & Specials | Sunset Heating & Cooling"
+    description="Current coupons and specials on heating, cooling, plumbing, and electrical service from Sunset Heating & Cooling."
+    path="/offers"
+    jsonLd={schema}
+  />
+
+  <PageHero
+    eyebrow="Save today"
+    title="Coupons & Specials"
+    description="Mention these offers when you call or request service online."
+    breadcrumbs={breadcrumbs}
+  />
+
+  <section class="pt-16">
+    <Container class="mx-auto mb-12 max-w-2xl text-center">
+      <p class="text-ink-600 leading-relaxed">
+        These are the current ways to save on heating, cooling, plumbing, and electrical service from Sunset.
+        Offers change seasonally, so check back, or just ask when you call, our team always knows what’s
+        currently running even if a promotion hasn’t made it onto this page yet.
+      </p>
+    </Container>
+  </section>
+
+  <section class="pb-16">
+    <Container class="reveal-group grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {offers.map((offer) => (
+        <div class:list={[
+          'reveal-item flex flex-col gap-2 rounded-xl border p-6 text-center',
+          offer.featured ? 'border-2 border-dashed border-gold-500/50 bg-gold-500/5' : 'border-ink-100 bg-white shadow-sm',
+        ]}>
+          {offer.featured && <span class="mx-auto rounded-full bg-gold-500 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-950">Featured</span>}
+          <h2 class="mt-1 font-display text-lg font-extrabold text-ink-900">{offer.title}</h2>
+          <p class="text-sm text-ink-600">{offer.detail}</p>
+        </div>
+      ))}
+    </Container>
+  </section>
+
+  <section class="bg-ink-50 pb-16 pt-4">
+    <Container class="mx-auto flex max-w-2xl flex-col gap-4 rounded-xl border border-ink-100 bg-white p-8 text-center shadow-sm">
+      <h2 class="font-display text-lg font-bold text-ink-900">How to Redeem</h2>
+      <p class="text-sm text-ink-600">
+        Mention the offer when you call or note it in your online service request. Our technician will confirm
+        the current terms and apply it to your invoice, no printed coupon required.
+      </p>
+      <p class="text-sm text-ink-500">Offers cannot be combined and are subject to change. Call {business.phone.display} to confirm current terms.</p>
+    </Container>
+  </section>
+
+  <FinalCTA />
+</Layout>

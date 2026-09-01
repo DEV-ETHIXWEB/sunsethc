@@ -1,0 +1,68 @@
+---
+import { serviceAreas } from '../../data/locations';
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+
+const points = serviceAreas.map((a) => ({ slug: a.slug, name: a.name, lat: a.lat, lng: a.lng, featured: !!a.featured }));
+---
+
+<section class="py-20">
+  <Container class="flex flex-col gap-8">
+    <SectionHeading
+      align="center"
+      eyebrow="Where we work"
+      title="Proudly serving the Portland metro, Mid-Willamette Valley & beyond"
+      description={`${serviceAreas.length}+ cities across Oregon and Southwest Washington.`}
+    />
+    <div
+      id="service-area-map"
+      class="reveal-item h-[26rem] w-full overflow-hidden rounded-xl border border-ink-100 shadow-sm"
+      data-points={JSON.stringify(points)}
+    >
+      <noscript>
+        <ul class="grid grid-cols-2 gap-2 p-6 sm:grid-cols-4">
+          {serviceAreas.map((a) => <li><a href={`/service-areas/${a.slug}`}>{a.name}</a></li>)}
+        </ul>
+      </noscript>
+    </div>
+    <p class="text-center">
+      <a href="/service-areas" class="font-bold text-brand-600 hover:text-brand-700">Browse every service area &rarr;</a>
+    </p>
+  </Container>
+</section>
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+
+  const el = document.getElementById('service-area-map');
+  if (el) {
+    const points = JSON.parse(el.dataset.points || '[]') as { slug: string; name: string; lat: number; lng: number; featured: boolean }[];
+    const map = L.map(el, { scrollWheelZoom: false });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      maxZoom: 18,
+    }).addTo(map);
+
+    const markers: L.CircleMarker[] = [];
+    for (const p of points) {
+      const marker = L.circleMarker([p.lat, p.lng], {
+        radius: p.featured ? 7 : 5,
+        color: '#263997',
+        fillColor: p.featured ? '#e8551e' : '#263997',
+        fillOpacity: 0.85,
+        weight: 2,
+      }).addTo(map);
+      marker.bindTooltip(p.name, { direction: 'top' });
+      marker.on('click', () => {
+        window.location.href = `/service-areas/${p.slug}`;
+      });
+      markers.push(marker);
+    }
+
+    if (markers.length) {
+      const group = L.featureGroup(markers);
+      map.fitBounds(group.getBounds().pad(0.15));
+    }
+  }
+</script>

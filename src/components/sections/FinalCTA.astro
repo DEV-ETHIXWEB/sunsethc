@@ -1,0 +1,26 @@
+---
+import { business } from '../../data/business';
+import Button from '../ui/Button.astro';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Ready for comfort you can count on?',
+  description = 'Flat-rate pricing, 24/7 emergency service, and a Lifetime Limited Warranty on every job.',
+} = Astro.props;
+---
+
+<section class="bg-brand-900 py-16">
+  <Container class="reveal-item flex flex-col items-center gap-6 text-center">
+    <h2 class="max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-4xl">{title}</h2>
+    <p class="max-w-xl text-white/75">{description}</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <Button href={business.phone.href} variant="accent" size="lg">Call {business.phone.display}</Button>
+      <Button href="/contact" variant="outline" size="lg">Request Service Online</Button>
+    </div>
+  </Container>
+</section>

@@ -1,0 +1,130 @@
+---
+// Full boilerplate terms of use, same launch-readiness discipline as
+// privacy-policy.astro: not the source site’s actual legal text (not
+// recoverable from the crawl), written to read as complete rather than a
+// stub, and still worth a final pass from counsel before launch, but
+// nothing here asserts anything false about how the business operates.
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import Container from '../components/ui/Container.astro';
+import { business } from '../data/business';
+import { siteUrl } from '../data/site';
+import { breadcrumbListSchema } from '../lib/seo';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Terms & Conditions', url: '/terms-and-conditions' },
+];
+const schema = breadcrumbListSchema(breadcrumbs, siteUrl);
+const lastUpdated = 'September 1, 2026';
+---
+
+<Layout>
+  <SEOHead slot="head" title="Terms & Conditions | Sunset Heating & Cooling" description="The terms and conditions governing your use of sunsethc.com and service requested from Sunset Heating & Cooling." path="/terms-and-conditions" noindex jsonLd={schema} />
+
+  <PageHero eyebrow="Legal" title="Terms & Conditions" description={`Last updated ${lastUpdated}`} breadcrumbs={breadcrumbs} />
+
+  <section class="py-16">
+    <Container class="mx-auto flex max-w-2xl flex-col gap-8 text-sm leading-relaxed text-ink-600">
+      <p>
+        These Terms & Conditions ("Terms") govern your use of sunsethc.com (the "Site"), operated by
+        {business.legalName} ("Sunset," "we," "us," or "our"). By using the Site or requesting service from us,
+        you agree to these Terms. If you do not agree, please do not use the Site.
+      </p>
+
+      <div>
+        <h2 class="mb-2 font-display text-lg font-bold text-ink-900">Use of This Website</h2>
+        <p>
+          This Site is provided for informational purposes and to allow visitors to learn about our services and
+          request an estimate or appointment. Content on this Site, including text, images, and the service
+          descriptions found on our category and service pages, is provided "as is" without warranty of any kind,
+          express or implied, and is intended for general informational purposes rather than as a substitute for
+          an on-site diagnosis by a licensed technician.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-2 font-display text-lg font-bold text-ink-900">Service Requests, Estimates & Scheduling</h2>
+        <p>
+          Submitting a request through this Site or by phone does not guarantee a specific appointment time;
+          scheduling is confirmed directly with our office. Any price discussed prior to an on-site visit is an
+          estimate only. Final flat-rate pricing is confirmed with you and agreed to before any work begins, and
+          no chargeable work is performed without your authorization.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-2 font-display text-lg font-bold text-ink-900">Payment</h2>
+        <p>
+          Payment is due upon completion of service unless other arrangements, such as approved financing, have
+          been made in advance. We accept the payment methods listed on our Site. Late or non-payment may result
+          in additional collection costs as permitted by Oregon law.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-2 font-display text-lg font-bold text-ink-900">Warranties & Guarantees</h2>
+        <p>
+          Any warranty on labor performed by Sunset is described at the time of service and, where applicable,
+          on your invoice. Manufacturer warranties on equipment and parts are provided and honored subject to
+          that manufacturer’s own terms, which are separate from any labor warranty Sunset provides.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-2 font-display text-lg font-bold text-ink-900">License & Insurance</h2>
+        <p>
+          {business.legalName} holds {business.license.label} #{business.license.number} and is bonded and
+          insured. A copy of our license status is available from the {business.license.issuer} upon request.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-2 font-display text-lg font-bold text-ink-900">Intellectual Property</h2>
+        <p>
+          The Site and its entire contents, features, and functionality (including but not limited to all text,
+          images, logos, and design) are owned by Sunset and are protected by copyright, trademark, and other
+          intellectual property laws. You may view and print pages from the Site for your own personal,
+          non-commercial use, but may not reproduce, distribute, or create derivative works without our written
+          permission.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-2 font-display text-lg font-bold text-ink-900">Limitation of Liability</h2>
+        <p>
+          To the fullest extent permitted by law, Sunset will not be liable for any indirect, incidental, or
+          consequential damages arising out of your use of, or inability to use, this Site. Nothing in these
+          Terms limits any liability that cannot be excluded or limited under applicable Oregon law.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-2 font-display text-lg font-bold text-ink-900">Governing Law</h2>
+        <p>
+          These Terms are governed by the laws of the State of Oregon, without regard to its conflict of law
+          provisions.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-2 font-display text-lg font-bold text-ink-900">Changes to These Terms</h2>
+        <p>
+          We may revise these Terms from time to time. The "last updated" date above reflects the most recent
+          revision. Continued use of the Site after changes are posted constitutes acceptance of the revised
+          Terms.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-2 font-display text-lg font-bold text-ink-900">Contact</h2>
+        <p>
+          Questions about these Terms can be sent to
+          <a href={`mailto:${business.email}`} class="font-semibold text-brand-600"> {business.email}</a> or by
+          calling <a href={business.phone.href} class="font-semibold text-brand-600">{business.phone.display}</a>.
+        </p>
+      </div>
+    </Container>
+  </section>
+</Layout>

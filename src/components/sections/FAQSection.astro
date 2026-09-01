@@ -1,0 +1,22 @@
+---
+import { generalFaqs, type FAQItem } from '../../data/faqs';
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import FAQAccordion from './FAQAccordion';
+
+interface Props {
+  items?: FAQItem[];
+  title?: string;
+  eyebrow?: string;
+  bg?: 'white' | 'gray';
+}
+
+const { items = generalFaqs, title = 'Frequently asked questions', eyebrow = 'FAQ', bg = 'gray' } = Astro.props;
+---
+
+<section class:list={['py-20', bg === 'gray' ? 'bg-ink-50' : 'bg-white']}>
+  <Container class="mx-auto flex max-w-3xl flex-col gap-8">
+    <SectionHeading align="center" eyebrow={eyebrow} title={title} />
+    <FAQAccordion client:visible items={items} />
+  </Container>
+</section>

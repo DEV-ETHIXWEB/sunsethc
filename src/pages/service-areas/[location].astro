@@ -1,0 +1,120 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import WhyChooseUs from '../../components/sections/WhyChooseUs.astro';
+import FinalCTA from '../../components/sections/FinalCTA.astro';
+import Container from '../../components/ui/Container.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { serviceAreas } from '../../data/locations';
+import { serviceCategories, servicesByCategory } from '../../data/services';
+import { business } from '../../data/business';
+import { siteUrl } from '../../data/site';
+import { breadcrumbListSchema, localBusinessSchema } from '../../lib/seo';
+
+export function getStaticPaths() {
+  return serviceAreas.map((area) => ({
+    params: { location: area.slug },
+    props: { area },
+  }));
+}
+
+const { area } = Astro.props;
+const nearbyAreas = serviceAreas.filter((a) => a.region === area.region && a.slug !== area.slug).slice(0, 8);
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Service Areas', url: '/service-areas' },
+  { name: area.name, url: `/service-areas/${area.slug}` },
+];
+
+const schema = [
+  breadcrumbListSchema(breadcrumbs, siteUrl),
+  localBusinessSchema({
+    siteUrl,
+    name: `${business.name}, ${area.name}, OR`,
+    legalName: business.legalName,
+    telephone: business.phone.display,
+    email: business.email,
+    address: business.locations.portland,
+    geo: { lat: area.lat, lng: area.lng },
+    areaServed: [area.name],
+    sameAs: Object.values(business.social),
+    logoUrl: `${siteUrl}/favicon.webp`,
+  }),
+];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title={`Heating, Cooling, Plumbing & Electrical in ${area.name}, OR | Sunset`}
+    description={`Sunset provides 24/7 heating, cooling, plumbing, and electrical service in ${area.name}, OR, with flat-rate pricing and a Lifetime Limited Warranty.`}
+    path={`/service-areas/${area.slug}`}
+    jsonLd={schema}
+  />
+
+  <PageHero
+    eyebrow={area.region}
+    title={`${area.name}, OR`}
+    description={`Sunset has provided heating, cooling, plumbing, and electrical service to ${area.name} homeowners for over 100 years.`}
+    breadcrumbs={breadcrumbs}
+  />
+
+  <section class="py-16">
+    <Container class="flex flex-col gap-12">
+      <div class="reveal-item mx-auto flex max-w-2xl flex-col gap-4 text-center">
+        <p class="text-ink-600">
+          Whether it’s a furnace that won’t start, a clogged drain, or a panel that needs an upgrade, Sunset’s
+          licensed technicians serve {area.name} and the surrounding {area.region} with the same flat-rate
+          pricing, 24/7 availability, and Lifetime Limited Warranty we offer everywhere we work.
+        </p>
+        <p class="text-ink-600">
+          Our Portland and Dallas, OR offices put {area.name} well within reach for same-day and emergency calls,
+          no long drive-out fees tacked onto your invoice, and no waiting days for a dispatch window.
+        </p>
+      </div>
+
+      {serviceCategories.map((cat) => (
+        <div class="reveal-item">
+          <div class="mb-4 flex items-center gap-3">
+            <div class="text-brand-600">
+              <Icon name={cat.icon} class="h-11 w-11" />
+            </div>
+            <h2 class="font-display text-xl font-bold text-ink-900">{cat.name} in {area.name}</h2>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {servicesByCategory(cat.slug).map((s) => (
+              <a href={`/${s.category}/${s.slug}`} class="rounded-full border border-ink-200 bg-white px-3.5 py-1.5 text-sm font-medium text-ink-600 hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700">
+                {s.name}
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </Container>
+  </section>
+
+  <WhyChooseUs title={`Why ${area.name} homeowners call Sunset`} />
+
+  {nearbyAreas.length > 0 && (
+    <section class="py-16">
+      <Container class="flex flex-col items-center gap-6 text-center">
+        <h2 class="font-display text-2xl font-bold text-ink-900">Nearby Areas We Also Serve</h2>
+        <div class="flex flex-wrap justify-center gap-2">
+          {nearbyAreas.map((a) => (
+            <a href={`/service-areas/${a.slug}`} class="rounded-full border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-700 hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700">
+              {a.name}
+            </a>
+          ))}
+        </div>
+        <a href="/service-areas" class="text-sm font-bold text-brand-600 hover:text-brand-700">View all service areas &rarr;</a>
+      </Container>
+    </section>
+  )}
+
+  <FinalCTA
+    title={`Serving ${area.name} 24/7`}
+    description={`Call ${business.phone.display} or request service online, Sunset is ready to help.`}
+  />
+</Layout>

@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import Hero from '../components/sections/Hero.astro';
+import EmergencyBand from '../components/sections/EmergencyBand.astro';
+import CoreServices from '../components/sections/CoreServices.astro';
+import ProcessSteps from '../components/sections/ProcessSteps.astro';
+import GuaranteeStrip from '../components/sections/GuaranteeStrip.astro';
+import WhyChooseUs from '../components/sections/WhyChooseUs.astro';
+import OffersBand from '../components/sections/OffersBand.astro';
+import ServiceAreaMap from '../components/sections/ServiceAreaMap.astro';
+import Reviews from '../components/sections/Reviews.astro';
+import FAQSection from '../components/sections/FAQSection.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import { business } from '../data/business';
+import { siteUrl } from '../data/site';
+import { localBusinessSchema } from '../lib/seo';
+
+const schema = localBusinessSchema({
+  siteUrl,
+  name: business.name,
+  legalName: business.legalName,
+  telephone: business.phone.display,
+  email: business.email,
+  address: business.locations.portland,
+  geo: business.locations.portland,
+  areaServed: ['Portland', 'Dallas', 'Salem', 'Vancouver'],
+  sameAs: Object.values(business.social),
+  logoUrl: `${siteUrl}/favicon.webp`,
+  priceRange: '$$',
+});
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Sunset Heating & Cooling | Portland & Dallas, OR Heating, AC, Plumbing & Electrical"
+    description="Family-trusted heating, cooling, plumbing & electrical service in Portland and Dallas, OR since 1922. 24/7 emergency service, flat-rate pricing, Lifetime Limited Warranty."
+    path="/"
+    jsonLd={schema}
+  />
+  <Hero />
+  <EmergencyBand />
+  <CoreServices />
+  <ProcessSteps />
+  <GuaranteeStrip />
+  <WhyChooseUs />
+  <OffersBand />
+  <ServiceAreaMap />
+  <Reviews />
+  <FAQSection />
+  <FinalCTA />
+</Layout>

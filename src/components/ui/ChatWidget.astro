@@ -1,0 +1,214 @@
+---
+// Site-wide chat widget. Answers come from a static, local knowledge base
+// (src/data/chatbot-knowledge.ts) built from the same real business data
+// used elsewhere on the site, no LLM, no API key, no network call, so it
+// works fully offline in the browser and never invents information.
+import { business } from '../../data/business';
+---
+
+<div id="chat-widget" class="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-[60] md:bottom-4">
+  <button
+    type="button"
+    id="chat-toggle"
+    aria-expanded="false"
+    aria-controls="chat-panel"
+    aria-label="Open chat assistant"
+    class="relative flex h-14 w-14 items-center justify-center rounded-full bg-brand-900 text-white shadow-lg ring-4 ring-gold-400/60 transition-transform hover:scale-105 hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+  >
+    <svg data-icon="chat" viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+      <path d="M4 5.5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H10.5l-4.3 3.4a.6.6 0 0 1-.97-.47V17.5H4a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1z" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    <svg data-icon="close" viewBox="0 0 20 20" class="hidden h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M5 5l10 10M15 5L5 15" stroke-linecap="round" />
+    </svg>
+    <span class="absolute -right-0.5 -top-0.5 h-4 w-4 rounded-full border-2 border-white bg-emerald-500" aria-hidden="true"></span>
+  </button>
+
+  <div
+    id="chat-panel"
+    role="dialog"
+    aria-label="Sunset assistant"
+    hidden
+    class="fixed inset-0 z-[60] flex flex-col overflow-hidden bg-white sm:absolute sm:inset-auto sm:bottom-[4.5rem] sm:right-0 sm:z-auto sm:h-[28rem] sm:w-80 sm:max-w-[calc(100vw-2rem)] sm:rounded-xl sm:border sm:border-ink-100 sm:shadow-2xl"
+  >
+    <div class="flex items-center gap-3 bg-brand-600 px-4 py-3 text-white [padding-top:max(0.75rem,env(safe-area-inset-top))] sm:[padding-top:0.75rem]">
+      <span class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-900 ring-2 ring-gold-400">
+        <svg viewBox="0 0 24 24" class="h-4.5 w-4.5" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+          <path d="M4 5.5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H10.5l-4.3 3.4a.6.6 0 0 1-.97-.47V17.5H4a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1z" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span class="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500" aria-hidden="true"></span>
+      </span>
+      <div class="flex-1">
+        <p class="font-display text-sm font-bold">Sunset Assistant</p>
+        <p class="text-xs text-brand-100">Answers about our services &amp; areas</p>
+      </div>
+      <button
+        type="button"
+        id="chat-close"
+        aria-label="Close chat"
+        class="rounded-md p-1.5 hover:bg-white/10 sm:hidden"
+      >
+        <svg viewBox="0 0 20 20" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M5 5l10 10M15 5L5 15" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <div id="chat-messages" class="flex-1 space-y-3 overflow-y-auto px-4 py-3">
+      <div class="flex flex-col gap-1.5">
+        <div class="max-w-[85%] rounded-lg rounded-bl-sm bg-ink-100 px-3 py-2 text-sm text-ink-800">
+          Hi! I’m the Sunset assistant. Ask me about our heating, cooling, plumbing, or electrical services, service
+          areas, financing, or how to reach us.
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-ink-100 p-3">
+      <p class="mb-2 text-[11px] text-ink-400">
+        Automated answers, for urgent issues call <a href={business.phone.href} class="font-semibold text-brand-600">{business.phone.display}</a>.
+      </p>
+      <form id="chat-form" class="flex gap-2">
+        <label for="chat-input" class="sr-only">Ask a question</label>
+        <input
+          id="chat-input"
+          type="text"
+          autocomplete="off"
+          placeholder="Ask a question…"
+          class="flex-1 rounded-md border border-ink-200 px-3 py-2 text-sm text-ink-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+        />
+        <button
+          type="submit"
+          aria-label="Send"
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-brand-600 text-white hover:bg-brand-700"
+        >
+          <svg viewBox="0 0 20 20" class="h-4 w-4" fill="currentColor" aria-hidden="true">
+            <path d="M2.5 17.5l15-7.5-15-7.5v6l10 1.5-10 1.5z" />
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { findAnswer, chatMenu, isMenuBranch, type MenuOption } from '../../data/chatbot-knowledge';
+
+  const widget = document.getElementById('chat-widget');
+  const toggleBtn = document.getElementById('chat-toggle');
+  const closeBtn = document.getElementById('chat-close');
+  const panel = document.getElementById('chat-panel');
+  const messages = document.getElementById('chat-messages');
+  const form = document.getElementById('chat-form') as HTMLFormElement | null;
+  const input = document.getElementById('chat-input') as HTMLInputElement | null;
+  const chatIcon = toggleBtn?.querySelector('[data-icon="chat"]');
+  const closeIcon = toggleBtn?.querySelector('[data-icon="close"]');
+  const isMobile = () => window.matchMedia('(max-width: 639px)').matches;
+
+  function setOpen(open: boolean) {
+    toggleBtn?.setAttribute('aria-expanded', String(open));
+    panel?.toggleAttribute('hidden', !open);
+    chatIcon?.classList.toggle('hidden', open);
+    closeIcon?.classList.toggle('hidden', !open);
+    document.body.classList.toggle('overflow-hidden', open && isMobile());
+    if (open) input?.focus();
+  }
+
+  toggleBtn?.addEventListener('click', () => {
+    setOpen(toggleBtn.getAttribute('aria-expanded') !== 'true');
+  });
+
+  closeBtn?.addEventListener('click', () => setOpen(false));
+
+  document.addEventListener('click', (e) => {
+    if (widget && !e.composedPath().includes(widget)) setOpen(false);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
+  });
+
+  function addMessage(text: string, from: 'user' | 'bot', link?: { label: string; href: string }) {
+    if (!messages) return;
+    const row = document.createElement('div');
+    row.className = 'flex flex-col gap-1.5' + (from === 'user' ? ' items-end' : '');
+
+    const bubble = document.createElement('div');
+    bubble.className =
+      from === 'user'
+        ? 'max-w-[85%] rounded-lg rounded-br-sm bg-brand-600 px-3 py-2 text-sm text-white'
+        : 'max-w-[85%] rounded-lg rounded-bl-sm bg-ink-100 px-3 py-2 text-sm text-ink-800';
+    bubble.textContent = text;
+    row.appendChild(bubble);
+
+    if (link) {
+      const a = document.createElement('a');
+      a.href = link.href;
+      a.textContent = link.label + ' →';
+      a.className = 'ml-1 text-xs font-semibold text-brand-600 hover:text-brand-700 hover:underline';
+      row.appendChild(a);
+    }
+
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function renderOptions(options: MenuOption[], showBackToMenu: boolean) {
+    if (!messages) return;
+    const row = document.createElement('div');
+    row.className = 'flex flex-wrap gap-2';
+
+    const makeChip = (label: string, dashed: boolean, onClick: () => void) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = label;
+      btn.className = dashed
+        ? 'rounded-full border border-dashed border-ink-300 px-3 py-1.5 text-xs font-medium text-ink-500 hover:border-brand-300 hover:text-brand-700'
+        : 'rounded-full border border-ink-200 px-3 py-1.5 text-xs font-medium text-ink-700 hover:border-brand-300 hover:bg-brand-50';
+      btn.addEventListener('click', onClick);
+      row.appendChild(btn);
+    };
+
+    for (const option of options) {
+      makeChip(option.label, false, () => selectOption(option, row));
+    }
+    if (showBackToMenu) {
+      makeChip('↺ Main Menu', true, () => selectOption(chatMenu, row));
+    }
+
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function selectOption(option: MenuOption, sourceRow: HTMLElement) {
+    sourceRow.remove();
+    addMessage(option.label, 'user');
+    window.setTimeout(() => {
+      if (isMenuBranch(option)) {
+        renderOptions(option.options, option !== chatMenu);
+      } else {
+        addMessage(option.answer, 'bot', option.link);
+        renderOptions(chatMenu.options, false);
+      }
+    }, 250);
+  }
+
+  function ask(text: string) {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    addMessage(trimmed, 'user');
+    const result = findAnswer(trimmed);
+    window.setTimeout(() => {
+      addMessage(result.answer, 'bot', result.link);
+      renderOptions(chatMenu.options, false);
+    }, 250);
+  }
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!input) return;
+    ask(input.value);
+    input.value = '';
+  });
+
+  renderOptions(chatMenu.options, false);
+</script>

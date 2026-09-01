@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import FAQSection from '../components/sections/FAQSection.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import Container from '../components/ui/Container.astro';
+import Icon from '../components/ui/Icon.astro';
+import { business } from '../data/business';
+import { siteUrl } from '../data/site';
+import { breadcrumbListSchema, faqPageSchema } from '../lib/seo';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Membership Program', url: '/membership-program' },
+];
+const perks = [
+  { icon: 'maintenance-plan' as const, title: 'Priority Scheduling', copy: 'Jump the line ahead of non-members, especially during peak season when everyone needs a technician at once.' },
+  { icon: 'heating-maintenance' as const, title: 'Seasonal Tune-Ups', copy: 'Regular heating & cooling tune-ups to catch problems early, before they turn into a no-heat or no-AC emergency.' },
+  { icon: 'flat-rate-pricing' as const, title: 'Member Pricing', copy: 'Discounted rates on repairs and future installations, the membership tends to pay for itself over a year or two.' },
+  { icon: 'warranty' as const, title: 'Extended Peace of Mind', copy: 'Combines with our Lifetime Limited Warranty on covered work for extra protection on your system.' },
+];
+
+const membershipFaqs = [
+  {
+    question: 'What is included in a seasonal tune-up?',
+    answer: 'A full safety and performance inspection of your covered system, checking electrical connections, refrigerant levels, filters, and the components most likely to fail if left unchecked.',
+  },
+  {
+    question: 'Can I add multiple systems to one membership?',
+    answer: 'Yes, homes with more than one heating or cooling unit can add additional units to a membership at a discounted add-on rate. Ask when you call.',
+  },
+  {
+    question: 'Is there a contract or can I cancel anytime?',
+    answer: 'Ask our team about current membership terms when you sign up, we’ll walk you through exactly what you’re agreeing to before you join.',
+  },
+  {
+    question: 'Does membership cover repairs, not just tune-ups?',
+    answer: 'Membership pricing applies member discounts to repairs performed during your membership term, on top of the included seasonal tune-up visits.',
+  },
+];
+
+const schema = [breadcrumbListSchema(breadcrumbs, siteUrl), faqPageSchema(membershipFaqs)];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Membership Program | Sunset Heating & Cooling"
+    description={`Join the ${business.membership.name}, starting at ${business.membership.startingPrice}, for priority scheduling and regular tune-ups.`}
+    path="/membership-program"
+    jsonLd={schema}
+  />
+
+  <PageHero
+    eyebrow="Membership"
+    title={business.membership.name}
+    description={`Starting at ${business.membership.startingPrice}`}
+    breadcrumbs={breadcrumbs}
+  />
+
+  <section class="py-16">
+    <Container class="flex flex-col gap-10">
+      <p class="reveal-item mx-auto max-w-2xl text-center text-ink-600">
+        A one-time repair fixes today’s problem. A membership is built to keep tomorrow’s problem from happening
+        in the first place, and to make sure that if something does go wrong, you’re already first in line, not
+        waiting behind every non-member who called before you.
+      </p>
+      <div class="reveal-group grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {perks.map((perk) => (
+          <div class="reveal-item flex flex-col gap-3 rounded-xl border border-ink-100 bg-white p-6 text-center shadow-sm">
+            <div class="mx-auto text-brand-600">
+              <Icon name={perk.icon} class="h-14 w-14" />
+            </div>
+            <h3 class="font-display text-base font-bold text-ink-900">{perk.title}</h3>
+            <p class="text-sm text-ink-500">{perk.copy}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="reveal-item mx-auto max-w-xl rounded-xl border-2 border-dashed border-gold-500/50 bg-gold-500/5 p-8 text-center">
+        <p class="font-display text-3xl font-extrabold text-ink-900">{business.membership.startingPrice}</p>
+        <p class="mt-2 text-sm text-ink-500">Ask about multi-unit and whole-home pricing when you call.</p>
+        <a href={business.phone.href} class="mt-5 inline-block rounded-md bg-brand-600 px-6 py-3 font-display font-semibold text-white hover:bg-brand-700">
+          Call {business.phone.display} to Join
+        </a>
+      </div>
+    </Container>
+  </section>
+
+  <FAQSection items={membershipFaqs} title="Membership questions" />
+
+  <FinalCTA />
+</Layout>

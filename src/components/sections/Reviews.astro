@@ -1,0 +1,52 @@
+---
+// Renders real testimonials from src/data/testimonials.ts if any have been
+// added. That file ships empty (see its header comment, the live site’s
+// review widget didn’t return extractable text during the crawl), so this
+// section falls back to an honest "read verified reviews" CTA instead of
+// showing fabricated quotes.
+import { testimonials } from '../../data/testimonials';
+import { business } from '../../data/business';
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+---
+
+<section class="bg-brand-950 py-20 text-white">
+  <Container class="flex flex-col gap-10">
+    <SectionHeading
+      align="center"
+      dark
+      eyebrow="Customer reviews"
+      title="What Portland & Dallas homeowners say"
+    />
+
+    {testimonials.length > 0 ? (
+      <div id="reviews-marquee" class="reveal-group grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {testimonials.map((t) => (
+          <div class="reveal-item flex flex-col gap-3 rounded-xl border border-white/10 bg-white/5 p-6">
+            <div class="flex gap-0.5 text-gold-400">
+              {Array.from({ length: t.rating }).map(() => (
+                <svg viewBox="0 0 20 20" class="h-4 w-4" fill="currentColor" aria-hidden="true"><path d="M10 2l1.9 4.3 4.7.4-3.6 3.1 1.1 4.6L10 12.1l-4.1 2.3 1.1-4.6-3.6-3.1 4.7-.4z"/></svg>
+              ))}
+            </div>
+            <p class="text-sm leading-relaxed text-white/85">&ldquo;{t.quote}&rdquo;</p>
+            <p class="text-sm font-bold text-white">{t.name}</p>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div class="reveal-item mx-auto flex max-w-xl flex-col items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-8 text-center">
+        <p class="text-white/80">
+          Read verified customer reviews from real Sunset customers on Google and BBB.
+        </p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <a href={business.reviewProfiles.bbb} target="_blank" rel="noopener noreferrer" class="rounded-md bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20">
+            View BBB Profile
+          </a>
+          <a href="/reviews" class="rounded-md bg-gold-500 px-4 py-2 text-sm font-semibold text-brand-950 hover:bg-gold-400">
+            See Reviews Page
+          </a>
+        </div>
+      </div>
+    )}
+  </Container>
+</section>

@@ -1,0 +1,38 @@
+---
+import { offers } from '../../data/offers';
+import { business } from '../../data/business';
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+
+const featured = offers.filter((o) => o.featured);
+---
+
+<section class="py-20">
+  <Container class="flex flex-col gap-10">
+    <SectionHeading
+      align="center"
+      eyebrow="Save today"
+      title="Current coupons & specials"
+      description="Ask about these offers when you call, or mention them when you book online."
+    />
+
+    <div class="reveal-group grid grid-cols-1 gap-5 sm:grid-cols-3">
+      {featured.map((offer) => (
+        <div class="reveal-item spotlight-card flex flex-col gap-2 rounded-xl border-2 border-dashed border-gold-500/50 bg-gold-500/5 p-6 text-center">
+          <span class="mx-auto rounded-full bg-gold-500 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-950">Limited time</span>
+          <h3 class="mt-2 font-display text-xl font-extrabold text-ink-900">{offer.title}</h3>
+          <p class="text-sm text-ink-600">{offer.detail}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="reveal-item mx-auto flex flex-wrap justify-center gap-4">
+      <a href="/offers" class="rounded-md bg-brand-600 px-6 py-3 font-display font-semibold text-white hover:bg-brand-700">
+        View All Offers
+      </a>
+      <a href={business.phone.href} class="rounded-md border-2 border-brand-600 px-6 py-3 font-display font-semibold text-brand-700 hover:bg-brand-50">
+        Call to Redeem
+      </a>
+    </div>
+  </Container>
+</section>

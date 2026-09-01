@@ -1,0 +1,60 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import FinalCTA from '../../components/sections/FinalCTA.astro';
+import Container from '../../components/ui/Container.astro';
+import { brands } from '../../data/products';
+import { siteUrl } from '../../data/site';
+import { breadcrumbListSchema } from '../../lib/seo';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Products', url: '/products' },
+];
+const schema = breadcrumbListSchema(breadcrumbs, siteUrl);
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Equipment Brands | Sunset Heating & Cooling"
+    description="Sunset installs and services equipment from Daikin, Mitsubishi Electric, and Trane."
+    path="/products"
+    jsonLd={schema}
+  />
+
+  <PageHero
+    eyebrow="Trusted equipment"
+    title="Equipment Brands We Install"
+    description="Sunset stands behind the equipment we install as much as the labor. We work with a small number of manufacturers we trust, rather than whatever is cheapest that week."
+    breadcrumbs={breadcrumbs}
+  />
+
+  <section class="py-16">
+    <Container class="reveal-group grid grid-cols-1 gap-5 sm:grid-cols-3">
+      {brands.map((brand) => (
+        <a href={`/products/${brand.slug}`} class="reveal-item flex flex-col gap-3 rounded-xl border border-ink-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
+          <h2 class="font-display text-xl font-bold text-ink-900">{brand.name}</h2>
+          <p class="text-sm leading-relaxed text-ink-500">{brand.description}</p>
+          <span class="mt-auto text-sm font-bold text-brand-600">Learn more &rarr;</span>
+        </a>
+      ))}
+    </Container>
+  </section>
+
+  <section class="bg-ink-50 py-16">
+    <Container class="mx-auto max-w-2xl text-center">
+      <h2 class="font-display text-2xl font-bold text-ink-900">How We Choose Equipment</h2>
+      <p class="mt-4 text-ink-600 leading-relaxed">
+        Sunset doesn’t chase whatever brand offers the deepest rebate that month. We install and stand behind
+        equipment from manufacturers with a track record for reliability and available parts support, so the
+        system we recommend today is still easy to service five or ten years from now. Every installation is
+        sized to your home’s specific square footage, insulation, and layout, not a generic estimate, and comes
+        with our flat-rate pricing and Lifetime Limited Warranty regardless of which brand fits your project best.
+      </p>
+    </Container>
+  </section>
+
+  <FinalCTA />
+</Layout>

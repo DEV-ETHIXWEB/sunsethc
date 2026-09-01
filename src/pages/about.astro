@@ -1,0 +1,119 @@
+---
+import { Image } from 'astro:assets';
+import historyImage from '../assets/photos/sunsethc-over-100yrs.webp';
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import GuaranteeStrip from '../components/sections/GuaranteeStrip.astro';
+import FAQSection from '../components/sections/FAQSection.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import Container from '../components/ui/Container.astro';
+import Icon from '../components/ui/Icon.astro';
+import { business } from '../data/business';
+import { serviceCategories } from '../data/services';
+import { siteUrl } from '../data/site';
+import { breadcrumbListSchema } from '../lib/seo';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'About', url: '/about' },
+];
+const schema = breadcrumbListSchema(breadcrumbs, siteUrl);
+
+// Sourced verbatim/paraphrased from the live sunsethc.com about page
+// (crawled 2026-09-01), the company’s real origin as a Portland fuel
+// company, not an invented history.
+const guarantees = [
+  'Money-back satisfaction guarantee',
+  'No-surprise, upfront pricing',
+  'Same-day emergency service',
+  'Lifetime Limited Warranty on covered work',
+  'Background-checked, drug-tested technicians',
+  'Clean, uniformed, respectful crews',
+  'On-time arrival or we make it right',
+  'Licensed, bonded & insured on every job',
+  '100% workmanship guarantee',
+  'Honest, straightforward recommendations',
+];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="About Sunset Heating & Cooling | Serving Portland & Dallas, OR Since 1922"
+    description={`${business.legalName} has served Portland and Dallas, OR for over 100 years, from a Portland fuel company to a full heating, cooling, plumbing, and electrical provider.`}
+    path="/about"
+    jsonLd={schema}
+  />
+
+  <PageHero
+    eyebrow="About Sunset"
+    title="Over 100 Years of Comfort, Built on Trust"
+    description="From a Portland fuel company to a full-service heating, cooling, plumbing, and electrical provider."
+    breadcrumbs={breadcrumbs}
+  />
+
+  <section class="py-16">
+    <Container class="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+      <div class="reveal-item flex flex-col gap-4">
+        <h2 class="font-display text-2xl font-bold text-ink-900">Our Story</h2>
+        <p class="text-ink-600 leading-relaxed">
+          For over 100 years, Sunset has been a trusted provider of heating and cooling solutions in the Portland
+          area, helping families and businesses stay comfortable throughout every season. Our roots trace back to
+          Sunset Fuel Co., a Portland company that supplied wood, coal, and sawdust for home heating, long before
+          the company expanded into gas furnaces, water heaters, and air conditioning.
+        </p>
+        <p class="text-ink-600 leading-relaxed">
+          Today, Sunset Heating &amp; Cooling serves Portland, Dallas, and the surrounding region with the same
+          principle that’s guided the company since its earliest days: superior service, built on trust. We
+          believe that maintaining the comfort of our customers is about more than just fixing a system, it’s
+          about building long-term relationships founded on reliability, transparency, and integrity.
+        </p>
+      </div>
+      <Image src={historyImage} alt="Sunset Heating & Cooling, over 100 years of service" class="reveal-item rounded-xl object-cover shadow-lg" />
+    </Container>
+  </section>
+
+  <section class="bg-ink-50 py-16">
+    <Container class="flex flex-col gap-8">
+      <div class="reveal-item mx-auto max-w-2xl text-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-accent-600">Our promise</span>
+        <h2 class="mt-2 font-display text-2xl font-bold text-ink-900 sm:text-3xl">10 Ironclad Guarantees</h2>
+      </div>
+      <div class="reveal-group grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {guarantees.map((g) => (
+          <div class="reveal-item flex items-start gap-3 rounded-lg border border-ink-100 bg-white p-4">
+            <svg viewBox="0 0 20 20" class="mt-0.5 h-5 w-5 shrink-0 text-brand-600" fill="currentColor" aria-hidden="true"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0l-3.5-3.5a1 1 0 1 1 1.4-1.4l2.8 2.8 6.8-6.8a1 1 0 0 1 1.4 0z"/></svg>
+            <p class="text-sm font-medium text-ink-700">{g}</p>
+          </div>
+        ))}
+      </div>
+    </Container>
+  </section>
+
+  <section class="py-16">
+    <Container class="flex flex-col gap-10">
+      <div class="reveal-item mx-auto max-w-2xl text-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-accent-600">What we do</span>
+        <h2 class="mt-2 font-display text-2xl font-bold text-ink-900 sm:text-3xl">Four Trades, One Company</h2>
+        <p class="mt-3 text-ink-600">
+          Most homeowners end up juggling separate contractors for heating, cooling, plumbing, and electrical work.
+          Sunset brings all four under one roof, one company to call, one crew that already knows your home.
+        </p>
+      </div>
+      <div class="reveal-group grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {serviceCategories.map((cat) => (
+          <a href={`/${cat.slug}`} class="reveal-item flex flex-col items-center gap-3 rounded-xl border border-ink-100 bg-white p-6 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
+            <Icon name={cat.icon} class="h-12 w-12 text-brand-600" />
+            <h3 class="font-display text-base font-bold text-ink-900">{cat.name}</h3>
+            <p class="text-sm text-ink-500">{cat.description}</p>
+          </a>
+        ))}
+      </div>
+    </Container>
+  </section>
+
+  <GuaranteeStrip />
+  <FAQSection />
+  <FinalCTA />
+</Layout>

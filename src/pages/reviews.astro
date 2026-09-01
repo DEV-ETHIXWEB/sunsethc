@@ -1,0 +1,55 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import Reviews from '../components/sections/Reviews.astro';
+import WhyChooseUs from '../components/sections/WhyChooseUs.astro';
+import GuaranteeStrip from '../components/sections/GuaranteeStrip.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import Container from '../components/ui/Container.astro';
+import { business } from '../data/business';
+import { siteUrl } from '../data/site';
+import { breadcrumbListSchema } from '../lib/seo';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Reviews', url: '/reviews' },
+];
+const schema = breadcrumbListSchema(breadcrumbs, siteUrl);
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Customer Reviews | Sunset Heating & Cooling"
+    description="Read what Portland & Dallas, OR homeowners say about Sunset Heating & Cooling’s heating, cooling, plumbing, and electrical service."
+    path="/reviews"
+    jsonLd={schema}
+  />
+
+  <PageHero
+    eyebrow="Our reputation"
+    title="Customer Reviews"
+    description="Real feedback from homeowners across our service area."
+    breadcrumbs={breadcrumbs}
+  />
+
+  <section class="py-16">
+    <Container class="mx-auto flex max-w-xl flex-col items-center gap-4 text-center">
+      <p class="text-ink-600">
+        We’re proud of our BBB A+ rating and the relationships we’ve built with customers across Portland and
+        Dallas, OR over more than 100 years in business. A rating is only as good as what’s behind it, so we’d
+        rather you read the actual reviews than take our word for it. Read verified reviews directly from our
+        BBB profile below, or ask any technician on-site for references from recent jobs in your neighborhood.
+      </p>
+      <a href={business.reviewProfiles.bbb} target="_blank" rel="noopener noreferrer" class="rounded-md bg-brand-600 px-6 py-3 font-display font-semibold text-white hover:bg-brand-700">
+        View Our BBB Profile
+      </a>
+    </Container>
+  </section>
+
+  <Reviews />
+  <GuaranteeStrip />
+  <WhyChooseUs title="What earns those reviews" />
+  <FinalCTA />
+</Layout>

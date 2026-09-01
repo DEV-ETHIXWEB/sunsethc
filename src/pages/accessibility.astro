@@ -1,0 +1,98 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import Container from '../components/ui/Container.astro';
+import { business } from '../data/business';
+import { siteUrl } from '../data/site';
+import { breadcrumbListSchema } from '../lib/seo';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Accessibility', url: '/accessibility' },
+];
+const schema = breadcrumbListSchema(breadcrumbs, siteUrl);
+
+const tools = [
+  { title: 'Bigger text', copy: 'Scales up body text site-wide for easier reading, without needing to zoom your whole browser.' },
+  { title: 'High contrast', copy: 'Switches to a higher-contrast color scheme for users with low vision.' },
+  { title: 'Grayscale', copy: 'Removes color entirely, useful for some visual sensitivities.' },
+  { title: 'Underline links', copy: 'Adds a permanent underline to every link, so links are identifiable by shape, not just color.' },
+  { title: 'Readable font', copy: 'Switches body text to a plainer, more evenly spaced font.' },
+  { title: 'Pause animations', copy: 'Stops scroll animations and motion effects for users sensitive to movement on screen.' },
+  { title: 'Large cursor', copy: 'Enlarges the mouse cursor for easier tracking on screen.' },
+];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Accessibility Statement | Sunset Heating & Cooling"
+    description="Sunset Heating & Cooling’s commitment to a website that’s accessible to everyone, including our on-page accessibility tools."
+    path="/accessibility"
+    jsonLd={schema}
+  />
+
+  <PageHero eyebrow="Our commitment" title="Accessibility Statement" breadcrumbs={breadcrumbs} />
+
+  <section class="py-16">
+    <Container class="mx-auto flex max-w-2xl flex-col gap-6 text-sm leading-relaxed text-ink-700">
+      <p>
+        Sunset Heating &amp; Cooling is committed to making our website usable by everyone, including older
+        visitors and people with visual, motor, or cognitive disabilities. That commitment shows up in two ways
+        on this site: the accessibility tools described below, and the underlying code itself, built with
+        semantic HTML, keyboard navigation, and visible focus states throughout.
+      </p>
+
+      <div>
+        <h2 class="mb-2 font-display text-xl font-bold text-ink-900">On-Page Accessibility Tools</h2>
+        <p class="mb-4">
+          Look for the accessibility icon in the bottom-left corner of every page. It opens a panel with seven
+          toggles, each one works independently, so you can combine any of them:
+        </p>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {tools.map((t) => (
+            <div class="rounded-lg border border-ink-100 bg-ink-50 p-4">
+              <p class="font-display text-sm font-bold text-ink-900">{t.title}</p>
+              <p class="mt-1 text-xs text-ink-500">{t.copy}</p>
+            </div>
+          ))}
+        </div>
+        <p class="mt-4">
+          Your choices are saved on this device, so you don’t need to reset them on your next visit. There’s also
+          a "Reset all" option in the panel if you want to start over, and a direct link to call us if the site
+          itself is getting in your way.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-2 font-display text-xl font-bold text-ink-900">Assistive Technology Compatibility</h2>
+        <p>
+          This site is built to work with screen readers and other assistive technology, keyboard-only navigation
+          works throughout, interactive elements have visible focus outlines, and images include descriptive
+          alternative text (or are marked purely decorative when appropriate).
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-2 font-display text-xl font-bold text-ink-900">Ongoing Efforts</h2>
+        <p>
+          We aim to follow the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA where practical.
+          Accessibility is an ongoing process rather than a one-time fix, and we review this site periodically as
+          it’s updated.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-2 font-display text-xl font-bold text-ink-900">Feedback &amp; Help</h2>
+        <p>
+          If you have trouble accessing any part of this website, or have feedback on how we can do better, please
+          call us at <a href={business.phone.href} class="font-semibold text-brand-600">{business.phone.display}</a> or
+          email <a href={`mailto:${business.email}`} class="font-semibold text-brand-600">{business.email}</a>. A
+          real person will help you get what you need, whether that’s information from the site or simply getting
+          your service request scheduled over the phone instead.
+        </p>
+      </div>
+    </Container>
+  </section>
+</Layout>

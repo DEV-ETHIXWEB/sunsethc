@@ -1,0 +1,36 @@
+---
+import { business } from '../../data/business';
+import Breadcrumbs from '../Breadcrumbs.astro';
+import Button from '../ui/Button.astro';
+import Container from '../ui/Container.astro';
+
+interface Crumb {
+  name: string;
+  url: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  breadcrumbs: Crumb[];
+}
+
+const { eyebrow, title, description, breadcrumbs } = Astro.props;
+---
+
+<section class="border-b border-ink-100 bg-brand-950 py-14">
+  <Container class="flex flex-col gap-5">
+    <Breadcrumbs items={breadcrumbs} dark />
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div class="flex max-w-2xl flex-col gap-3">
+        {eyebrow && <span class="text-xs font-bold uppercase tracking-widest text-gold-400">{eyebrow}</span>}
+        <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">{title}</h1>
+        {description && <p class="text-white/75">{description}</p>}
+      </div>
+      <Button href={business.phone.href} variant="accent" size="lg" class="w-fit">
+        Call {business.phone.display}
+      </Button>
+    </div>
+  </Container>
+</section>

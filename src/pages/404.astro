@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import Container from '../components/ui/Container.astro';
+import Button from '../components/ui/Button.astro';
+import { business } from '../data/business';
+---
+
+<Layout>
+  <SEOHead slot="head" title="Page Not Found | Sunset Heating & Cooling" description="The page you’re looking for couldn’t be found." path="/404" noindex />
+
+  <section class="flex min-h-[70vh] items-center bg-brand-950">
+    <Container class="flex flex-col items-center gap-6 py-24 text-center">
+      <p class="font-display text-7xl font-extrabold text-gold-400">404</p>
+      <h1 class="max-w-md text-2xl font-bold text-white">We couldn’t find that page.</h1>
+      <p class="max-w-md text-white/70">It may have moved. Try the homepage, or call us directly for help.</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <Button href="/" variant="accent" size="lg">Back to Homepage</Button>
+        <Button href={business.phone.href} variant="outline" size="lg">Call {business.phone.display}</Button>
+      </div>
+    </Container>
+  </section>
+</Layout>

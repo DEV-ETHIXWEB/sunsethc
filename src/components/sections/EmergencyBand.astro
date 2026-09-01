@@ -1,0 +1,19 @@
+---
+import { business } from '../../data/business';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  message?: string;
+}
+
+const { message = 'Heat out? Pipe burst? Power down? We answer 24/7, no overtime charges.' } = Astro.props;
+---
+
+<div class="bg-brand-800">
+  <Container class="flex flex-col items-center justify-between gap-2 py-2.5 text-center text-sm text-white sm:flex-row sm:text-left">
+    <p class="font-semibold">{message}</p>
+    <a href={business.phone.href} class="whitespace-nowrap font-display font-extrabold text-accent-400 underline decoration-accent-400/40 underline-offset-2 hover:decoration-accent-400">
+      Call {business.phone.display} &rarr;
+    </a>
+  </Container>
+</div>

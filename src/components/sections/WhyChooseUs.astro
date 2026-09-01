@@ -1,0 +1,50 @@
+---
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Icon from '../ui/Icon.astro';
+import { business } from '../../data/business';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'Why Portland & Dallas homeowners choose Sunset' } = Astro.props;
+
+const points = [
+  {
+    icon: 'warranty' as const,
+    title: 'Over 100 years in business',
+    copy: `Sunset has served the Portland area since ${business.foundingYear}, from a local fuel company to a full heating, cooling, plumbing, and electrical provider.`,
+  },
+  {
+    icon: 'flat-rate-pricing' as const,
+    title: 'Flat-rate pricing',
+    copy: 'You approve the price before any work starts. No hourly surprises, no trip-charge games.',
+  },
+  {
+    icon: '24-by-7' as const,
+    title: '24/7 emergency availability',
+    copy: 'Heating, cooling, plumbing, and electrical emergencies do not wait for business hours, and neither do we.',
+  },
+  {
+    icon: 'insured' as const,
+    title: 'Licensed, bonded & insured',
+    copy: `Every technician works under ${business.license.label} #${business.license.number}, with NATE-certified training behind the wrench.`,
+  },
+];
+---
+
+<section class="bg-ink-50 py-20">
+  <Container class="flex flex-col gap-10">
+    <SectionHeading align="center" eyebrow="The Sunset difference" title={title} />
+    <div class="reveal-group grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {points.map((p) => (
+        <div class="reveal-item flex flex-col gap-3 rounded-xl bg-white p-6 shadow-sm">
+          <Icon name={p.icon} class="h-12 w-12 text-brand-600" />
+          <h3 class="font-display text-base font-bold text-ink-900">{p.title}</h3>
+          <p class="text-sm leading-relaxed text-ink-500">{p.copy}</p>
+        </div>
+      ))}
+    </div>
+  </Container>
+</section>

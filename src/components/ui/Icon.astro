@@ -1,0 +1,48 @@
+---
+// Inlines one of the client’s real vector icon set (49 icons, hand-designed
+// per service, src/assets/icons/, sourced from the "Achromatic" variant and
+// recolored to fill="currentColor" so size/color are controlled entirely via
+// CSS, same as any icon font would be, but as real crisp vector artwork).
+const svgModules = import.meta.glob('../../assets/icons/*.svg', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
+
+const icons: Record<string, string> = {};
+for (const [path, raw] of Object.entries(svgModules)) {
+  const slug = path.split('/').pop()!.replace('.svg', '');
+  icons[slug] = raw;
+}
+
+export type IconName =
+  | '100-plus-years' | '24-by-7' | 'a-plus-rated' | 'ac-repair' | 'ac' | 'air-duct'
+  | 'air-handler' | 'air-purification' | 'boiler' | 'dehumidifier' | 'drain-cleaning'
+  | 'ductless-mini-split' | 'ev-charger' | 'electrical-panel' | 'electrical'
+  | 'emergency-plumbing' | 'energy-efficient' | 'faucet' | 'flat-rate-pricing' | 'furnace'
+  | 'garbage-disposal' | 'generator' | 'heat-pump-1' | 'heat-pump' | 'heating-maintenance'
+  | 'heating' | 'humidifier' | 'hydro-jetting' | 'indoor-air-quality' | 'insured'
+  | 'leak-detection' | 'lighting' | 'maintenance-plan' | 'outdoor-lighting' | 'outlet'
+  | 'pipe-repair' | 'plumbing' | 'sewer-camera' | 'sewer-line' | 'sump-pump'
+  | 'tankless-water-heater' | 'thermostat' | 'toilet' | 'warranty' | 'water-filtration'
+  | 'water-heater' | 'water-line' | 'water-softener' | 'wiring';
+
+interface Props {
+  name: IconName;
+  class?: string;
+}
+
+const { name, class: className = 'h-12 w-12' } = Astro.props;
+const svg = icons[name];
+if (!svg) throw new Error(`Icon.astro: unknown icon "${name}"`);
+---
+
+<span class:list={['icon-inline inline-block', className]} set:html={svg} />
+
+<style>
+  .icon-inline :global(svg) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+</style>

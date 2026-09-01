@@ -1,0 +1,81 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import ServiceAreaMap from '../../components/sections/ServiceAreaMap.astro';
+import WhyChooseUs from '../../components/sections/WhyChooseUs.astro';
+import FinalCTA from '../../components/sections/FinalCTA.astro';
+import Container from '../../components/ui/Container.astro';
+import { serviceAreas, regions } from '../../data/locations';
+import { siteUrl } from '../../data/site';
+import { breadcrumbListSchema } from '../../lib/seo';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Service Areas', url: '/service-areas' },
+];
+const schema = breadcrumbListSchema(breadcrumbs, siteUrl);
+
+const regionDescriptions: Record<string, string> = {
+  'Portland Metro': 'Our home turf, anchored by our Portland office, with same-day availability across the metro area.',
+  'Washington County': 'Beaverton, Hillsboro, Tigard, Tualatin, and the wider Tualatin Valley.',
+  'Mid-Willamette Valley': 'Home to our Dallas office, covering Salem, Newberg, and the surrounding wine country.',
+  'Columbia River Gorge': 'From Hood River to The Dalles, serving Gorge communities with the same flat-rate pricing.',
+  'SW Washington': 'Vancouver and Camas, just across the river from our Portland office.',
+};
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Service Areas | Sunset Heating & Cooling, Portland, Dallas & Beyond"
+    description={`Sunset provides heating, cooling, plumbing, and electrical service across ${serviceAreas.length}+ cities in the Portland metro, Mid-Willamette Valley, Columbia River Gorge, and SW Washington.`}
+    path="/service-areas"
+    jsonLd={schema}
+  />
+
+  <PageHero
+    eyebrow="Where we work"
+    title="Service Areas"
+    description={`Sunset proudly serves ${serviceAreas.length}+ cities in Oregon and Southwest Washington.`}
+    breadcrumbs={breadcrumbs}
+  />
+
+  <section class="py-16">
+    <Container class="mx-auto max-w-2xl text-center">
+      <p class="text-ink-600 leading-relaxed">
+        With offices in Portland and Dallas, OR, Sunset covers a wide stretch of the Willamette Valley, the
+        Portland metro, and out to the Columbia River Gorge and Southwest Washington. Wherever you are in our
+        coverage area, you get the same flat-rate pricing, 24/7 emergency availability, and Lifetime Limited
+        Warranty, not a scaled-down version for cities farther from our offices.
+      </p>
+    </Container>
+  </section>
+
+  <ServiceAreaMap />
+
+  <section class="pb-20">
+    <Container class="flex flex-col gap-10">
+      {regions.map((region) => (
+        <div class="reveal-item">
+          <h2 class="font-display text-xl font-bold text-ink-900">{region}</h2>
+          <p class="mb-4 mt-1 text-sm text-ink-500">{regionDescriptions[region]}</p>
+          <div class="flex flex-wrap gap-2">
+            {serviceAreas.filter((a) => a.region === region).map((area) => (
+              <a
+                href={`/service-areas/${area.slug}`}
+                class="rounded-full border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-700 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
+              >
+                {area.name}
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </Container>
+  </section>
+
+  <WhyChooseUs />
+
+  <FinalCTA />
+</Layout>

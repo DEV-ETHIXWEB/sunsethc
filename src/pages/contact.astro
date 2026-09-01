@@ -1,0 +1,70 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import ProcessSteps from '../components/sections/ProcessSteps.astro';
+import FAQSection from '../components/sections/FAQSection.astro';
+import Container from '../components/ui/Container.astro';
+import ContactForm from '../components/forms/ContactForm';
+import { business } from '../data/business';
+import { siteUrl } from '../data/site';
+import { breadcrumbListSchema } from '../lib/seo';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Contact', url: '/contact' },
+];
+const schema = breadcrumbListSchema(breadcrumbs, siteUrl);
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Contact Sunset Heating & Cooling | Portland & Dallas, OR"
+    description="Request service online or call Sunset Heating & Cooling directly, 24/7 emergency service available in Portland, Dallas, OR and the surrounding region."
+    path="/contact"
+    jsonLd={schema}
+  />
+
+  <PageHero
+    eyebrow="Get in touch"
+    title="Contact Sunset"
+    description="Request service online, or call us directly for 24/7 emergency help."
+    breadcrumbs={breadcrumbs}
+  />
+
+  <section class="py-16">
+    <Container class="grid grid-cols-1 gap-10 lg:grid-cols-3">
+      <div class="reveal-item rounded-xl border border-ink-100 bg-white p-8 shadow-sm lg:col-span-2">
+        <h2 class="mb-6 font-display text-xl font-bold text-ink-900">Request Service</h2>
+        <ContactForm client:load />
+      </div>
+
+      <div class="reveal-item flex flex-col gap-6">
+        <div class="rounded-xl bg-brand-900 p-6 text-white">
+          <h3 class="font-display text-lg font-bold">Call Us</h3>
+          <a href={business.phone.href} class="mt-2 block font-display text-2xl font-extrabold text-gold-400 hover:text-gold-300">
+            {business.phone.display}
+          </a>
+          <p class="mt-1 text-sm text-white/70">{business.hours.emergency}</p>
+        </div>
+
+        <div class="rounded-xl border border-ink-100 bg-white p-6">
+          <h3 class="mb-3 font-display text-sm font-bold uppercase tracking-wide text-ink-500">Our Offices</h3>
+          {Object.values(business.locations).map((loc) => (
+            <div class="mb-4 last:mb-0">
+              <p class="font-semibold text-ink-800">{loc.label}</p>
+              <a href={loc.directionsUrl} target="_blank" rel="noopener noreferrer" class="text-sm text-ink-500 hover:text-brand-600">
+                {loc.street}, {loc.city}, {loc.state} {loc.zip}
+              </a>
+            </div>
+          ))}
+          <a href={`mailto:${business.email}`} class="block text-sm text-ink-500 hover:text-brand-600">{business.email}</a>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <ProcessSteps title="What happens after you reach out" />
+  <FAQSection />
+</Layout>

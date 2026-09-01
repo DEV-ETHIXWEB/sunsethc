@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import FAQSection from '../components/sections/FAQSection.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import { generalFaqs, categoryFaqs } from '../data/faqs';
+import { serviceCategories } from '../data/services';
+import { siteUrl } from '../data/site';
+import { breadcrumbListSchema, faqPageSchema } from '../lib/seo';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'FAQ', url: '/faq' },
+];
+
+const allFaqs = [...generalFaqs, ...Object.values(categoryFaqs).flat()];
+const schema = [breadcrumbListSchema(breadcrumbs, siteUrl), faqPageSchema(allFaqs)];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Frequently Asked Questions | Sunset Heating & Cooling"
+    description="Answers to common heating, cooling, plumbing, and electrical questions from Sunset Heating & Cooling."
+    path="/faq"
+    jsonLd={schema}
+  />
+
+  <PageHero
+    eyebrow="Answers"
+    title="Frequently Asked Questions"
+    description="General questions about Sunset, plus common questions specific to heating, cooling, plumbing, and electrical work."
+    breadcrumbs={breadcrumbs}
+  />
+
+  <FAQSection items={generalFaqs} title="General Questions" bg="gray" />
+
+  {serviceCategories.map((cat, i) => (
+    categoryFaqs[cat.slug] && (
+      <FAQSection
+        items={categoryFaqs[cat.slug]}
+        title={`${cat.name} Questions`}
+        eyebrow={cat.name}
+        bg={i % 2 === 0 ? 'white' : 'gray'}
+      />
+    )
+  ))}
+
+  <FinalCTA />
+</Layout>

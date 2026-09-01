@@ -1,0 +1,43 @@
+---
+import { business } from '../../data/business';
+---
+
+<div class="fixed inset-x-0 bottom-0 z-40 flex border-t border-ink-200 bg-white shadow-[0_-2px_12px_rgba(0,0,0,0.08)] md:hidden [padding-bottom:env(safe-area-inset-bottom)]">
+  <a
+    href={business.phone.href}
+    class="flex flex-1 flex-col items-center justify-center gap-0.5 border-r border-ink-100 py-2.5 text-accent-600 active:bg-accent-50"
+  >
+    <svg viewBox="0 0 20 20" class="h-5 w-5" fill="currentColor" aria-hidden="true">
+      <path d="M3.654 1.328a.678.678 0 0 1 1.015-.063l2.220 2.221a.678.678 0 0 1 .174.696l-.747 2.245a.678.678 0 0 0 .174.696l3.586 3.586a.678.678 0 0 0 .696.174l2.245-.747a.678.678 0 0 1 .696.174l2.221 2.22a.678.678 0 0 1-.063 1.015c-1.532 1.278-3.83 1.451-6.017.377-2.35-1.154-4.72-3.524-5.874-5.874-1.074-2.187-.9-4.485.377-6.017z" />
+    </svg>
+    <span class="text-[11px] font-semibold">Call</span>
+  </a>
+  <a
+    href="/contact"
+    class="flex flex-1 flex-col items-center justify-center gap-0.5 border-r border-ink-100 py-2.5 text-brand-600 active:bg-brand-50"
+  >
+    <svg viewBox="0 0 20 20" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <path d="M4 5h12a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H8l-3 3v-3H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    <span class="text-[11px] font-semibold">Book</span>
+  </a>
+  <a
+    href="/offers"
+    class="flex flex-1 flex-col items-center justify-center gap-0.5 border-r border-ink-100 py-2.5 text-gold-600 active:bg-gold-50"
+  >
+    <svg viewBox="0 0 20 20" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <path d="M10 3l1.9 4.3 4.7.4-3.6 3.1 1.1 4.6L10 13.1l-4.1 2.3 1.1-4.6-3.6-3.1 4.7-.4z" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    <span class="text-[11px] font-semibold">Offers</span>
+  </a>
+  <a
+    href="/service-areas"
+    class="flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5 text-ink-600 active:bg-ink-50"
+  >
+    <svg viewBox="0 0 20 20" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <path d="M10 2c-3 0-5.5 2.4-5.5 5.5C4.5 11.5 10 18 10 18s5.5-6.5 5.5-10.5C15.5 4.4 13 2 10 2z" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="10" cy="7.5" r="2" stroke-linecap="round" />
+    </svg>
+    <span class="text-[11px] font-semibold">Areas</span>
+  </a>
+</div>
