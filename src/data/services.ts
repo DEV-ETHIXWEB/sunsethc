@@ -31,6 +31,10 @@ export interface Service {
   signs?: string[];
   benefits?: string[];
   process?: string[];
+  // Real photo filename (src/assets/photos/), only set for a couple of
+  // services where a genuine illustrative photo exists.
+  image?: string;
+  imageAlt?: string;
 }
 
 export interface ServiceCategory {
@@ -89,7 +93,7 @@ export const serviceCategories: ServiceCategory[] = [
       'Water or refrigerant leaks',
     ],
     icon: 'ac',
-    heroImage: 'bg-home-page-new.webp',
+    heroImage: 'home-page-bg-scaled-crop-e1686077375645.webp',
   },
   {
     slug: 'plumbing',
@@ -149,7 +153,9 @@ export const services: Service[] = [
       'Prevention of larger, costlier problems down the line',
       'Improved safety by addressing electrical or refrigerant issues',
       'Better indoor air quality through proper filtration',
-    ] },
+    ],
+    image: 'frozen-heat-pump-unit.jpg.webp',
+    imageAlt: 'Sunset technician inspecting a heat pump with excessive ice buildup on the outdoor unit' },
   { slug: 'heat-pump-maintenance', name: 'Heat Pump Maintenance', category: 'heating', icon: 'heat-pump-1',
     shortDescription: 'Seasonal tune-ups that keep heat pumps efficient in both heating and cooling mode.',
     description: 'Because heat pumps run year-round, regular maintenance matters even more. Sunset’s tune-ups check refrigerant levels, electrical connections, and defrost cycles to keep your system efficient in every season.' },
@@ -187,7 +193,9 @@ export const services: Service[] = [
   // ---------------- Air Conditioning ----------------
   { slug: 'ac-repair', name: 'AC Repair', category: 'air-conditioning', featured: true, icon: 'ac-repair',
     shortDescription: '24/7 air conditioning repair when the heat is on and your AC isn’t.',
-    description: 'A broken AC during a Portland heat wave is an emergency. Sunset offers 24/7 AC repair with flat-rate pricing and technicians who service all major brands.' },
+    description: 'A broken AC during a Portland heat wave is an emergency. Sunset offers 24/7 AC repair with flat-rate pricing and technicians who service all major brands.',
+    image: 'burnt-heat-pump-capacitor.jpg.webp',
+    imageAlt: 'A burnt AC capacitor removed by a Sunset technician during a repair visit' },
   { slug: 'ac-installation', name: 'AC Installation', category: 'air-conditioning', featured: true, icon: 'ac',
     shortDescription: 'New central air conditioning systems, sized and installed correctly.',
     description: 'Sunset installs high-efficiency central air conditioning systems from Daikin, Trane, and other trusted brands, sized specifically for your home rather than a one-size-fits-all estimate.' },

@@ -1,13 +1,18 @@
 ---
 // Fully custom, dependency-free coverage map. No external tile provider, no
-// API key, no third-party map library. The Oregon/Washington outline below
-// is real geography, not decoration: clipped from a public US state
-// boundary dataset (simplified, then projected with the exact same
-// equirectangular formula used for the city points) so the state line and
-// every city marker line up correctly in the same coordinate space. That
-// projection and clipping happened once, offline (see git history for the
-// generation script); the result is the static path data below, so there's
-// no runtime dependency on any mapping service at all.
+// API key, no third-party map library — the earlier version of this section
+// briefly used a Leaflet/CARTO embed and it broke with an ugly, watermarked
+// "API KEY REQUIRED" overlay in production. Never again: everything below is
+// a static SVG projection plus real geography, so there's no runtime call to
+// any mapping service that can fail or ask for a key.
+//
+// The Oregon/Washington outline is real geography, not decoration: clipped
+// from a public US state boundary dataset (simplified, then projected with
+// the exact same equirectangular formula used for the city points) so the
+// state line and every city marker line up correctly in the same coordinate
+// space. That projection and clipping happened once, offline (see git
+// history for the generation script); the result is the static path data
+// below, so there's no runtime dependency on any mapping service at all.
 import { serviceAreas, regions } from '../../data/locations';
 import Container from '../ui/Container.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
@@ -32,6 +37,7 @@ function project(lat: number, lng: number) {
 const points = serviceAreas.map((a) => ({ ...a, ...project(a.lat, a.lng) }));
 const hub = points.find((p) => p.slug === 'portland')!;
 const spokes = points.filter((p) => p.featured && p.slug !== 'portland');
+const sorted = [...points].sort((a, b) => a.name.localeCompare(b.name));
 
 // Real Oregon + Washington outlines, clipped to the display bounds above
 // and projected into the same 0-100 space. Source: a public US state
@@ -44,108 +50,180 @@ const BORDER_PATH =
   'M 44.18,0.0 L 45.11,2.82 M 45.11,2.82 L 46.6,24.34 M 46.6,24.34 L 62.2,32.16 M 62.2,32.16 L 75.48,20.81 M 75.48,20.81 L 83.78,19.64 M 83.78,19.64 L 93.4,23.55 M 93.4,23.55 L 94.4,28.25 M 94.4,28.25 L 100.0,24.81';
 ---
 
-<section class="py-20">
+<section class="border-b border-white/10 bg-brand-950 py-20">
   <Container class="flex flex-col gap-8">
     <SectionHeading
       align="center"
       eyebrow="Where we work"
       title="Proudly serving the Portland metro, Mid-Willamette Valley & beyond"
       description={`${serviceAreas.length}+ cities across Oregon and Southwest Washington.`}
+      dark
     />
 
     <div class="reveal-item flex flex-wrap items-center justify-center gap-2" role="group" aria-label="Filter by region">
-      <button type="button" data-region-filter="all" aria-pressed="true" class="region-pill rounded-full border border-brand-600 bg-brand-600 px-4 py-1.5 text-xs font-bold text-white transition-colors">
+      <button type="button" data-region-filter="all" aria-pressed="true" class="region-pill rounded-full border border-accent-400 bg-accent-400 px-4 py-1.5 text-xs font-bold text-brand-950 transition-colors">
         All Regions
       </button>
       {regions.map((r) => (
-        <button type="button" data-region-filter={r} aria-pressed="false" class="region-pill rounded-full border border-ink-200 bg-white px-4 py-1.5 text-xs font-semibold text-ink-600 transition-colors hover:border-brand-300 hover:text-brand-700">
+        <button type="button" data-region-filter={r} aria-pressed="false" class="region-pill rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-semibold text-white/70 transition-colors hover:border-white/40 hover:text-white">
           {r}
         </button>
       ))}
     </div>
 
-    <div id="service-map" class="relative mx-auto aspect-[4/3] w-full max-w-3xl overflow-hidden rounded-2xl border border-ink-100 bg-gradient-to-b from-sky-50 to-white shadow-lg sm:aspect-[16/10]">
-      <svg class="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <defs>
-          <linearGradient id="ocean-fade" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.16" />
-            <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
-          </linearGradient>
-          <pattern id="land-texture" width="4" height="4" patternUnits="userSpaceOnUse">
-            <rect width="4" height="4" fill="#eaecf9" />
-            <circle cx="1" cy="1" r="0.15" fill="#263997" fill-opacity="0.06" />
-          </pattern>
-          <radialGradient id="map-glow" cx="46%" cy="55%" r="55%">
-            <stop offset="0%" stop-color="#263997" stop-opacity="0.10" />
-            <stop offset="100%" stop-color="#263997" stop-opacity="0" />
-          </radialGradient>
-        </defs>
+    <div class="reveal-item grid gap-6 lg:grid-cols-[3fr_2fr] lg:items-start">
+      <!-- Map card -->
+      <div
+        id="service-map"
+        class="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-brand-900 via-brand-950 to-ink-950 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.6)] sm:aspect-[16/10] lg:h-[520px] lg:aspect-auto"
+      >
+        <!-- fine dot-grid texture across the whole card, like a real nav display -->
+        <div class="pointer-events-none absolute inset-0 [background-image:radial-gradient(circle,rgba(255,255,255,0.07)_1px,transparent_1px)] [background-size:16px_16px]"></div>
 
-        {/* Ocean wash on the west edge, orients the viewer before any land is drawn */}
-        <rect width="100" height="100" fill="url(#ocean-fade)" />
+        <!-- oversized faint watermark, purely decorative -->
+        <span class="pointer-events-none absolute -bottom-6 -right-3 select-none font-display text-[7rem] font-black leading-none tracking-tight text-white/[0.04] sm:text-[9rem]" aria-hidden="true">OR</span>
 
-        {/* Real Oregon + Washington landmass, Washington a touch lighter to read as the second state */}
-        <path d={OREGON_PATH} fill="url(#land-texture)" stroke="#263997" stroke-width="0.35" stroke-opacity="0.5" vector-effect="non-scaling-stroke" />
-        <path d={WASHINGTON_PATH} fill="#f7f7f8" stroke="#263997" stroke-width="0.35" stroke-opacity="0.5" vector-effect="non-scaling-stroke" />
-        <path d={BORDER_PATH} fill="none" stroke="#735800" stroke-width="0.45" stroke-dasharray="1.4 1" stroke-opacity="0.55" vector-effect="non-scaling-stroke" />
+        <div id="map-zoom-content" class="absolute inset-0 origin-center transition-transform duration-300 ease-out">
+          <svg class="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs>
+              <linearGradient id="ocean-fade" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.28" />
+                <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+              </linearGradient>
+              <pattern id="land-texture" width="4" height="4" patternUnits="userSpaceOnUse">
+                <rect width="4" height="4" fill="#2c3ea3" fill-opacity="0.35" />
+                <circle cx="1" cy="1" r="0.18" fill="#ffffff" fill-opacity="0.12" />
+              </pattern>
+              <radialGradient id="map-glow" cx="46%" cy="55%" r="60%">
+                <stop offset="0%" stop-color="#ffcf06" stop-opacity="0.10" />
+                <stop offset="100%" stop-color="#ffcf06" stop-opacity="0" />
+              </radialGradient>
+            </defs>
 
-        <rect width="100" height="100" fill="url(#map-glow)" />
+            {/* Ocean wash on the west edge, orients the viewer before any land is drawn */}
+            <rect width="100" height="100" fill="url(#ocean-fade)" />
 
-        {spokes.map((s) => (
-          <line
-            x1={hub.xPct} y1={hub.yPct} x2={s.xPct} y2={s.yPct}
-            stroke="#263997" stroke-opacity="0.2" stroke-width="0.22"
-            stroke-dasharray="1 1.2" vector-effect="non-scaling-stroke"
-            data-region-line={s.region}
-          />
-        ))}
-      </svg>
+            {/* Real Oregon + Washington landmass, Washington a touch darker to read as the second state */}
+            <path d={OREGON_PATH} fill="url(#land-texture)" stroke="#ffcf06" stroke-width="0.35" stroke-opacity="0.55" vector-effect="non-scaling-stroke" />
+            <path d={WASHINGTON_PATH} fill="#1c2666" stroke="#ffcf06" stroke-width="0.35" stroke-opacity="0.55" vector-effect="non-scaling-stroke" />
+            <path d={BORDER_PATH} fill="none" stroke="#ffcf06" stroke-width="0.45" stroke-dasharray="1.4 1" stroke-opacity="0.7" vector-effect="non-scaling-stroke" />
 
-      <span class="pointer-events-none absolute left-[6%] top-[14%] font-display text-[11px] font-bold uppercase tracking-widest text-brand-300 sm:text-sm">WA</span>
-      <span class="pointer-events-none absolute left-[6%] top-[46%] font-display text-[11px] font-bold uppercase tracking-widest text-brand-300 sm:text-sm">OR</span>
+            <rect width="100" height="100" fill="url(#map-glow)" />
 
-      {points.map((p) => (
-        <a
-          href={`/service-areas/${p.slug}`}
-          data-region-point={p.region}
-          data-city-name={p.name}
-          class="map-point group absolute -translate-x-1/2 -translate-y-1/2 focus:z-30 focus:outline-none"
-          style={`left:${p.xPct}%; top:${p.yPct}%;`}
-          aria-label={`${p.name}, OR, ${p.region} service area`}
-        >
-          {p.featured && (
-            <span class="pointer-events-none absolute inset-0 -m-1.5 animate-ping rounded-full bg-accent-400/50 [animation-duration:2.5s]"></span>
-          )}
-          <span
-            class:list={[
-              'relative block rounded-full ring-2 ring-white transition-all duration-200 group-hover:scale-[1.8] group-focus-visible:scale-[1.8]',
-              p.featured ? (p.slug === 'portland' ? 'h-3.5 w-3.5 bg-brand-600 shadow-md ring-[3px]' : 'h-3 w-3 bg-accent-400 shadow-md') : 'h-1.5 w-1.5 bg-brand-400',
-            ]}
-          ></span>
-          <span class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-lg bg-brand-950 px-2.5 py-1.5 text-center opacity-0 shadow-xl transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
-            <span class="block font-display text-xs font-bold text-white">{p.name}</span>
-            <span class="block text-[10px] text-white/60">{p.region}</span>
-            <span class="absolute left-1/2 top-full -mt-px h-2 w-2 -translate-x-1/2 rotate-45 bg-brand-950"></span>
-          </span>
-        </a>
-      ))}
+            {spokes.map((s) => (
+              <line
+                x1={hub.xPct} y1={hub.yPct} x2={s.xPct} y2={s.yPct}
+                stroke="#ffcf06" stroke-opacity="0.28" stroke-width="0.22"
+                stroke-dasharray="1 1.2" vector-effect="non-scaling-stroke"
+                data-region-line={s.region}
+              />
+            ))}
+          </svg>
 
-      <div class="pointer-events-none absolute left-3 top-3 rounded-lg bg-white/90 px-3 py-2 shadow-md ring-1 ring-ink-100 backdrop-blur-sm">
-        <p class="font-display text-lg font-extrabold leading-none text-brand-900">{serviceAreas.length}+</p>
-        <p class="text-[10px] font-semibold uppercase tracking-wide text-ink-500">Cities served</p>
+          <span class="pointer-events-none absolute left-[6%] top-[12%] font-display text-[11px] font-bold uppercase tracking-widest text-white/40 sm:text-sm">Washington</span>
+          <span class="pointer-events-none absolute left-[6%] top-[48%] font-display text-[11px] font-bold uppercase tracking-widest text-white/40 sm:text-sm">Oregon</span>
+          <span class="pointer-events-none absolute left-[1.5%] top-[70%] -translate-y-1/2 -rotate-90 whitespace-nowrap font-display text-[9px] font-bold uppercase tracking-[0.25em] text-sky-200/40 [transform-origin:left_center]">Pacific Ocean</span>
+
+          {points.map((p) => (
+            <a
+              href={`/service-areas/${p.slug}`}
+              data-region-point={p.region}
+              data-city={p.slug}
+              class="map-point group absolute -translate-x-1/2 -translate-y-1/2 focus:z-30 focus:outline-none"
+              style={`left:${p.xPct}%; top:${p.yPct}%;`}
+              aria-label={`${p.name}, OR, ${p.region} service area`}
+            >
+              {p.featured && (
+                <span class="pointer-events-none absolute inset-0 -m-1.5 animate-ping rounded-full bg-accent-400/50 [animation-duration:2.5s]"></span>
+              )}
+              <span
+                class:list={[
+                  'relative block rounded-full ring-2 ring-brand-950 transition-all duration-200 group-hover:scale-[1.8] group-focus-visible:scale-[1.8]',
+                  p.featured ? (p.slug === 'portland' ? 'h-3.5 w-3.5 bg-accent-400 shadow-md ring-[3px]' : 'h-3 w-3 bg-accent-400 shadow-md') : 'h-1.5 w-1.5 bg-sky-200',
+                ]}
+              ></span>
+              <span class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-lg bg-white px-2.5 py-1.5 text-center opacity-0 shadow-xl transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+                <span class="block font-display text-xs font-bold text-brand-900">{p.name}</span>
+                <span class="block text-[10px] text-ink-500">{p.region}</span>
+                <span class="absolute left-1/2 top-full -mt-px h-2 w-2 -translate-x-1/2 rotate-45 bg-white"></span>
+              </span>
+            </a>
+          ))}
+        </div>
+
+        <!-- coverage badge -->
+        <div class="pointer-events-none absolute left-3 top-3 flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 shadow-md backdrop-blur-md">
+          <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 text-accent-400" fill="currentColor" aria-hidden="true"><path d="M12 2C7.6 2 4 5.6 4 10c0 5.4 6.6 11.1 7.8 12.1a.6.6 0 0 0 .4.15.6.6 0 0 0 .4-.15C13.4 21.1 20 15.4 20 10c0-4.4-3.6-8-8-8zm0 10.8a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6z"/></svg>
+          <span class="font-display text-[10px] font-bold uppercase tracking-wide text-white">{serviceAreas.length}+ cities &middot; OR &amp; WA</span>
+        </div>
+
+        <!-- zoom controls (real: scales the map layer, clamped) -->
+        <div class="absolute bottom-3 left-3 flex flex-col overflow-hidden rounded-lg border border-white/15 bg-white/10 shadow-md backdrop-blur-md">
+          <button type="button" id="map-zoom-in" aria-label="Zoom in" class="flex h-8 w-8 items-center justify-center text-white/80 transition-colors hover:bg-white/15 hover:text-white">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <button type="button" id="map-zoom-reset" aria-label="Reset zoom" class="flex h-8 w-8 items-center justify-center border-y border-white/15 text-white/80 transition-colors hover:bg-white/15 hover:text-white">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 12V6m0 6h6"/></svg>
+          </button>
+          <button type="button" id="map-zoom-out" aria-label="Zoom out" class="flex h-8 w-8 items-center justify-center text-white/80 transition-colors hover:bg-white/15 hover:text-white">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>
+          </button>
+        </div>
+
+        <!-- legend -->
+        <div class="pointer-events-none absolute bottom-3 right-3 flex items-center gap-3 rounded-lg border border-white/15 bg-white/10 px-3 py-1.5 text-[10px] font-semibold text-white/80 shadow-md backdrop-blur-md">
+          <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-accent-400"></span>Most-served</span>
+          <span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-sky-200"></span>Service area</span>
+        </div>
       </div>
 
-      <div class="pointer-events-none absolute bottom-3 right-3 flex items-center gap-3 rounded-lg bg-white/90 px-3 py-1.5 text-[10px] font-semibold text-ink-600 shadow-md ring-1 ring-ink-100 backdrop-blur-sm">
-        <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-accent-400"></span>Most-served</span>
-        <span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-brand-400"></span>Service area</span>
+      <!-- Sidebar: detail card + search + city grid -->
+      <div class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+        <div id="map-detail" class="flex min-h-[92px] flex-col justify-center gap-1 rounded-xl border border-white/10 bg-white/5 p-3.5">
+          <p id="map-detail-hint" class="flex items-start gap-2 text-sm leading-snug text-white/60">
+            <svg viewBox="0 0 24 24" class="mt-0.5 h-4 w-4 shrink-0 text-accent-400" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Hover or tap a city, on the map or in the list, to see local service details.
+          </p>
+          <div id="map-detail-content" class="hidden flex-col gap-1">
+            <span id="map-detail-badge" class="hidden w-fit rounded-full bg-accent-400 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-brand-950">Headquarters</span>
+            <h3 id="map-detail-name" class="font-display text-base font-bold text-white"></h3>
+            <p id="map-detail-region" class="text-xs font-semibold uppercase tracking-wide text-accent-400"></p>
+            <p id="map-detail-blurb" class="mt-0.5 text-xs leading-relaxed text-white/60"></p>
+          </div>
+        </div>
+
+        <label class="relative block">
+          <span class="sr-only">Search cities</span>
+          <svg viewBox="0 0 24 24" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input
+            id="map-search"
+            type="text"
+            placeholder="Search city..."
+            class="w-full rounded-lg border border-white/15 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder:text-white/35 outline-none focus:border-accent-400/60 focus:ring-2 focus:ring-accent-400/20"
+          />
+        </label>
+
+        <div id="map-city-grid" class="grid max-h-[340px] grid-cols-2 gap-1.5 overflow-y-auto pr-1">
+          {sorted.map((p) => (
+            <a
+              href={`/service-areas/${p.slug}`}
+              data-city={p.slug}
+              data-region-point={p.region}
+              data-name={p.name.toLowerCase()}
+              class="city-chip group flex items-center justify-between gap-1 rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-2 text-xs font-semibold text-white/75 transition-colors hover:border-accent-400/50 hover:bg-white/10 hover:text-white"
+            >
+              <span class="truncate">{p.name}</span>
+              <svg viewBox="0 0 24 24" class="h-3 w-3 shrink-0 text-white/30 transition-transform group-hover:translate-x-0.5 group-hover:text-accent-400" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+          ))}
+          <p id="map-no-results" class="col-span-2 hidden py-4 text-center text-xs text-white/40">No cities match your search.</p>
+        </div>
+
+        <a href="/service-areas" class="mt-1 flex items-center justify-center rounded-lg bg-accent-400 px-4 py-2.5 text-sm font-bold text-brand-950 transition-colors hover:bg-accent-300">
+          Browse every service area
+        </a>
       </div>
     </div>
-
-    <p class="text-center text-xs text-ink-400">Hover or tap any point for the city name, click to view that service area.</p>
-
-    <p class="text-center">
-      <a href="/service-areas" class="font-bold text-brand-600 hover:text-brand-700">Browse every service area &rarr;</a>
-    </p>
   </Container>
 </section>
 
@@ -153,6 +231,12 @@ const BORDER_PATH =
   #service-map:has(.map-point:hover) .map-point:not(:hover),
   #service-map:has(.map-point:focus-visible) .map-point:not(:focus-visible) {
     opacity: 0.45;
+  }
+
+  .city-chip.is-active {
+    border-color: rgba(255, 207, 6, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -165,31 +249,140 @@ const BORDER_PATH =
 <script>
   const pills = document.querySelectorAll<HTMLButtonElement>('[data-region-filter]');
   const points = document.querySelectorAll<HTMLElement>('.map-point');
+  const chips = document.querySelectorAll<HTMLElement>('.city-chip');
   const lines = document.querySelectorAll<SVGLineElement>('[data-region-line]');
+  const searchInput = document.getElementById('map-search') as HTMLInputElement | null;
+  const noResults = document.getElementById('map-no-results');
 
-  function applyFilter(region: string) {
+  const detailHint = document.getElementById('map-detail-hint');
+  const detailContent = document.getElementById('map-detail-content');
+  const detailBadge = document.getElementById('map-detail-badge');
+  const detailName = document.getElementById('map-detail-name');
+  const detailRegion = document.getElementById('map-detail-region');
+  const detailBlurb = document.getElementById('map-detail-blurb');
+
+  let activeRegion = 'all';
+  let query = '';
+
+  function applyFilters() {
+    let visibleCount = 0;
     points.forEach((p) => {
-      const match = region === 'all' || p.dataset.regionPoint === region;
+      const region = p.dataset.regionPoint || '';
+      const match = activeRegion === 'all' || region === activeRegion;
       p.style.opacity = match ? '1' : '0.15';
       p.style.pointerEvents = match ? 'auto' : 'none';
     });
     lines.forEach((l) => {
-      const match = region === 'all' || l.dataset.regionLine === region;
+      const match = activeRegion === 'all' || l.dataset.regionLine === activeRegion;
       l.style.opacity = match ? '1' : '0.08';
     });
+    chips.forEach((c) => {
+      const region = c.dataset.regionPoint || '';
+      const name = c.dataset.name || '';
+      const regionMatch = activeRegion === 'all' || region === activeRegion;
+      const queryMatch = query === '' || name.includes(query);
+      const visible = regionMatch && queryMatch;
+      c.classList.toggle('hidden', !visible);
+      if (visible) visibleCount++;
+    });
+    noResults?.classList.toggle('hidden', visibleCount > 0);
     pills.forEach((btn) => {
-      const active = btn.dataset.regionFilter === region;
+      const active = btn.dataset.regionFilter === activeRegion;
       btn.setAttribute('aria-pressed', String(active));
-      btn.classList.toggle('border-brand-600', active);
-      btn.classList.toggle('bg-brand-600', active);
-      btn.classList.toggle('text-white', active);
-      btn.classList.toggle('border-ink-200', !active);
-      btn.classList.toggle('bg-white', !active);
-      btn.classList.toggle('text-ink-600', !active);
+      btn.classList.toggle('border-accent-400', active);
+      btn.classList.toggle('bg-accent-400', active);
+      btn.classList.toggle('text-brand-950', active);
+      btn.classList.toggle('border-white/20', !active);
+      btn.classList.toggle('bg-white/5', !active);
+      btn.classList.toggle('text-white/70', !active);
     });
   }
 
   pills.forEach((btn) => {
-    btn.addEventListener('click', () => applyFilter(btn.dataset.regionFilter || 'all'));
+    btn.addEventListener('click', () => {
+      activeRegion = btn.dataset.regionFilter || 'all';
+      applyFilters();
+    });
+  });
+
+  searchInput?.addEventListener('input', () => {
+    query = searchInput.value.trim().toLowerCase();
+    applyFilters();
+  });
+
+  const cityData = new Map<string, { name: string; region: string }>();
+  points.forEach((p) => {
+    const slug = p.dataset.city;
+    const nameEl = p.querySelector('.font-display');
+    const regionEl = p.querySelector('.text-ink-500');
+    if (slug) cityData.set(slug, { name: nameEl?.textContent || slug, region: regionEl?.textContent || '' });
+  });
+
+  function showDetail(slug: string) {
+    const data = cityData.get(slug);
+    if (!data) return;
+    detailHint?.classList.add('hidden');
+    detailContent?.classList.remove('hidden');
+    detailContent?.classList.add('flex');
+    if (detailName) detailName.textContent = data.name;
+    if (detailRegion) detailRegion.textContent = data.region;
+    if (detailBlurb) {
+      detailBlurb.textContent =
+        slug === 'portland'
+          ? 'Our home base. Flat-rate heating, cooling, plumbing & electrical service, dispatched daily across the metro.'
+          : `Fast, flat-rate heating, cooling, plumbing & electrical service in ${data.name}, OR.`;
+    }
+    if (detailBadge) detailBadge.classList.toggle('hidden', slug !== 'portland');
+
+    points.forEach((p) => p.classList.toggle('is-active', p.dataset.city === slug));
+    chips.forEach((c) => c.classList.toggle('is-active', c.dataset.city === slug));
+  }
+
+  function clearDetail() {
+    detailHint?.classList.remove('hidden');
+    detailContent?.classList.add('hidden');
+    detailContent?.classList.remove('flex');
+    points.forEach((p) => p.classList.remove('is-active'));
+    chips.forEach((c) => c.classList.remove('is-active'));
+  }
+
+  points.forEach((p) => {
+    p.addEventListener('mouseenter', () => p.dataset.city && showDetail(p.dataset.city));
+    p.addEventListener('focus', () => p.dataset.city && showDetail(p.dataset.city));
+    p.addEventListener('mouseleave', clearDetail);
+    p.addEventListener('blur', clearDetail);
+  });
+  chips.forEach((c) => {
+    c.addEventListener('mouseenter', () => c.dataset.city && showDetail(c.dataset.city));
+    c.addEventListener('focus', () => c.dataset.city && showDetail(c.dataset.city));
+    c.addEventListener('mouseleave', clearDetail);
+    c.addEventListener('blur', clearDetail);
+  });
+
+  // Real zoom: scales the SVG + marker layer together so points stay
+  // aligned with the map underneath, clamped to a sane range.
+  const zoomContent = document.getElementById('map-zoom-content');
+  const zoomInBtn = document.getElementById('map-zoom-in');
+  const zoomOutBtn = document.getElementById('map-zoom-out');
+  const zoomResetBtn = document.getElementById('map-zoom-reset');
+  let zoom = 1;
+  const ZOOM_MIN = 1;
+  const ZOOM_MAX = 2.2;
+  const ZOOM_STEP = 0.3;
+
+  function applyZoom() {
+    if (zoomContent) zoomContent.style.transform = `scale(${zoom})`;
+  }
+  zoomInBtn?.addEventListener('click', () => {
+    zoom = Math.min(ZOOM_MAX, zoom + ZOOM_STEP);
+    applyZoom();
+  });
+  zoomOutBtn?.addEventListener('click', () => {
+    zoom = Math.max(ZOOM_MIN, zoom - ZOOM_STEP);
+    applyZoom();
+  });
+  zoomResetBtn?.addEventListener('click', () => {
+    zoom = 1;
+    applyZoom();
   });
 </script>

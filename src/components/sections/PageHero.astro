@@ -1,4 +1,6 @@
 ---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
 import { business } from '../../data/business';
 import Breadcrumbs from '../Breadcrumbs.astro';
 import Button from '../ui/Button.astro';
@@ -14,13 +16,23 @@ interface Props {
   title: string;
   description?: string;
   breadcrumbs: Crumb[];
+  // Optional real photo background, when omitted this renders as a flat
+  // navy band like every other inner page (unchanged default behavior).
+  image?: ImageMetadata;
+  imageAlt?: string;
 }
 
-const { eyebrow, title, description, breadcrumbs } = Astro.props;
+const { eyebrow, title, description, breadcrumbs, image, imageAlt = '' } = Astro.props;
 ---
 
-<section class="border-b border-ink-100 bg-brand-950 py-14">
-  <Container class="flex flex-col gap-5">
+<section class="relative overflow-hidden border-b border-ink-100 bg-brand-950 py-14">
+  {image && (
+    <>
+      <Image src={image} alt={imageAlt} class="absolute inset-0 h-full w-full object-cover opacity-45" loading="eager" />
+      <div class="absolute inset-0 bg-gradient-to-t from-brand-950 via-brand-950/85 to-brand-900/70"></div>
+    </>
+  )}
+  <Container class="relative flex flex-col gap-5">
     <Breadcrumbs items={breadcrumbs} dark />
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div class="flex max-w-2xl flex-col gap-3">
