@@ -1,4 +1,5 @@
 ---
+import heroImage from '../assets/photos/2-2-1.jpg_11zon.webp';
 import Layout from '../layouts/Layout.astro';
 import SEOHead from '../components/SEOHead.astro';
 import PageHero from '../components/sections/PageHero.astro';
@@ -31,6 +32,8 @@ const schema = breadcrumbListSchema(breadcrumbs, siteUrl);
     title="Contact Sunset"
     description="Request service online, or call us directly for 24/7 emergency help."
     breadcrumbs={breadcrumbs}
+    image={heroImage}
+    imageAlt="A Sunset Heating & Cooling service van"
   />
 
   <section class="py-16">

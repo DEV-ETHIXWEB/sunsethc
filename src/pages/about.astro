@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import historyImage from '../assets/photos/sunsethc-over-100yrs.webp';
+import sealBadge from '../assets/brand/100yr-seal.webp';
 import Layout from '../layouts/Layout.astro';
 import SEOHead from '../components/SEOHead.astro';
 import PageHero from '../components/sections/PageHero.astro';
@@ -52,7 +53,14 @@ const schema = breadcrumbListSchema(breadcrumbs, siteUrl);
           {business.philosophy}
         </p>
       </div>
-      <Image src={historyImage} alt="Sunset Heating & Cooling, over 100 years of service" class="reveal-item rounded-xl object-cover shadow-lg" />
+      <div class="reveal-item relative">
+        <Image src={historyImage} alt="Sunset Heating & Cooling, over 100 years of service" class="rounded-xl object-cover shadow-lg" />
+        <Image
+          src={sealBadge}
+          alt="Over 100 years serving Portland and Dallas, OR"
+          class="absolute -bottom-4 right-1 h-24 w-24 drop-shadow-xl sm:-bottom-6 sm:-right-6 sm:h-32 sm:w-32"
+        />
+      </div>
     </Container>
   </section>
 

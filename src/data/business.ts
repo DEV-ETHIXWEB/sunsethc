@@ -105,10 +105,10 @@ export const business = {
   ],
 
   partners: [
-    { name: 'Daikin Comfort Pro', logo: 'daikin-1.png.webp' },
-    { name: 'RUUD Pro', logo: 'ruud-pro-1.png.webp' },
-    { name: 'NW Natural', logo: 'nw-natural-1.png.webp' },
-    { name: 'NATE Certified', logo: 'nate-1.png.webp' },
+    { name: 'Daikin Comfort Pro', logo: 'daikin-logo.webp' },
+    { name: 'RUUD Pro', logo: 'ruud-logo.webp' },
+    { name: 'NW Natural', logo: 'nw-natural-logo.webp' },
+    { name: 'NATE Certified', logo: 'nate-logo.webp' },
   ],
 
   paymentMethods: ['American Express', 'Mastercard', 'Visa', 'Discover'],
