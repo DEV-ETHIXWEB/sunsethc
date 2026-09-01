@@ -25,6 +25,12 @@ export interface Service {
   category: ServiceCategory['slug'];
   featured?: boolean;
   icon: IconName;
+  // Real, page-specific detail pulled from the matching live service page
+  // (crawled 2026-09-01) where available, not written generically. Only
+  // populated for a sample of services so far.
+  signs?: string[];
+  benefits?: string[];
+  process?: string[];
 }
 
 export interface ServiceCategory {
@@ -32,6 +38,11 @@ export interface ServiceCategory {
   name: string;
   description: string;
   intro: string;
+  // Real numbered warning-sign / common-problem lists pulled from the live
+  // category pages (crawled 2026-09-01), not generic filler, present only
+  // where the live page actually published one.
+  warningSigns?: string[];
+  commonProblems?: string[];
   icon: IconName;
   heroImage: string;
 }
@@ -41,7 +52,18 @@ export const serviceCategories: ServiceCategory[] = [
     slug: 'heating',
     name: 'Heating',
     description: 'Furnace, heat pump, ductless, and whole-home heating installation, repair, and maintenance for Portland & Dallas, OR winters.',
-    intro: 'Willamette Valley winters put a real strain on an aging or undersized heating system. Sunset installs, repairs, and maintains furnaces, heat pumps, ductless mini splits, and whole-home humidity and air quality equipment, backed by flat-rate pricing agreed before any work starts and a Lifetime Limited Warranty on covered work. Whether your furnace has stopped putting out heat entirely or you are planning a proactive upgrade before the cold sets in, our NATE-certified technicians handle the diagnosis, the install, and everything in between.',
+    intro: 'Serving the community since 1922! Heating systems are an important part of any home, especially those in and around Portland, OR. Sunset installs, repairs, and maintains furnaces, heat pumps, ductless mini splits, and whole-home humidity and air quality equipment, backed by flat-rate pricing agreed before any work starts and a Lifetime Limited Warranty on covered work. Whether your furnace has stopped putting out heat entirely or you are planning a proactive upgrade before the cold sets in, our NATE-certified technicians handle the diagnosis, the install, and everything in between.',
+    warningSigns: [
+      'Uneven or lack of heat coming from vents',
+      'Non-working thermostat',
+      'Loud banging or metallic noises',
+      'Frequent cycling on and off',
+      'Dust or soot coming from the vents',
+      'Strange odors',
+      'A pilot light that is not blue',
+      'Increased electric, gas, or fuel bills',
+      'Poor indoor air quality',
+    ],
     icon: 'heating',
     heroImage: 'sunset-hvac-electrical-plumbing-feat-01.webp',
   },
@@ -49,7 +71,23 @@ export const serviceCategories: ServiceCategory[] = [
     slug: 'air-conditioning',
     name: 'Air Conditioning',
     description: 'AC installation, repair, and maintenance, plus air handling and filtration for Willamette Valley summers.',
-    intro: 'Portland-area summers have gotten hotter, and an undersized or failing AC system turns that into a real problem fast. Sunset installs, repairs, and maintains central air conditioning, air handlers, and whole-home filtration, all with flat-rate pricing and 24/7 emergency availability when a system fails during a heat wave. We service all major brands, whether we installed the system or not.',
+    intro: 'Sunset has provided trusted air conditioning services to generations of Oregon homeowners since 1922. Our licensed and insured HVAC technicians provide dependable AC repair, installation, and maintenance with genuine local care, flat-rate upfront pricing, and free estimates. We service all major brands, whether we installed the system or not.',
+    commonProblems: [
+      'Burnt or failing capacitors',
+      'Refrigerant leaks',
+      'Electrical failures and wiring damage',
+      'Frozen evaporator coils or drain line backups',
+      'Clogged air filters and ductwork',
+      'Thermostat issues and calibration errors',
+    ],
+    warningSigns: [
+      'AC only emits hot air',
+      'Weak airflow',
+      'Odd or loud noises',
+      'Unusual smells or musty odors',
+      'Excess moisture buildup',
+      'Water or refrigerant leaks',
+    ],
     icon: 'ac',
     heroImage: 'bg-home-page-new.webp',
   },
@@ -57,7 +95,7 @@ export const serviceCategories: ServiceCategory[] = [
     slug: 'plumbing',
     name: 'Plumbing',
     description: 'Water heaters, drain & sewer service, repiping, remodeling, and leak detection from a flat-rate, licensed plumbing team.',
-    intro: 'From a slow drain to a burst pipe flooding your basement, Sunset’s licensed plumbers handle residential and light commercial plumbing across Portland, Dallas, OR, and the surrounding region. That includes everything from routine drain cleaning and water heater replacement to sewer line repair, repiping, and full bathroom or kitchen remodels, all with upfront flat-rate pricing so you know the cost before we start.',
+    intro: 'Plumbing work is never a good idea for the novice Portland, OR homeowner. Water runs through quite a bit of the appliances, fixtures, and systems in your home, and a mistake can mean costly damage to pipes, fixtures, and the home itself, plus the risk of water damage and mold. Sunset is staffed by experienced, qualified plumbers offering premium plumbing services, from routine drain cleaning and water heater replacement to sewer line repair, repiping, and full bathroom or kitchen remodels, all with upfront flat-rate pricing and a promise of 100% satisfaction on every project.',
     icon: 'plumbing',
     heroImage: 'collapsed-old-sewer-pipe.jpg.webp',
   },
@@ -65,7 +103,14 @@ export const serviceCategories: ServiceCategory[] = [
     slug: 'electrical',
     name: 'Electrical',
     description: 'Panel upgrades, EV chargers, generators, lighting, and whole-home electrical repair from licensed electricians.',
-    intro: 'Modern homes ask a lot of an electrical system that may have been designed decades ago. Sunset’s licensed electricians handle panel upgrades, EV charger installation, generator installation, lighting, and general electrical repair and troubleshooting, work that should never be left to a handyman. Every job follows current electrical code and is backed by our Lifetime Limited Warranty.',
+    intro: 'Electrical work is never a good idea for the novice Portland, OR homeowner. Electricity runs the majority of the appliances, machines, and technology we use every day, and a mistake can mean costly damage to electronics and wiring, plus the risk of fire. Most panels in older Portland homes weren’t designed to handle today’s demand: smart thermostats, EV chargers, home offices, and multi-device households. Sunset’s licensed electricians handle panel upgrades, EV charger installation, generator installation, lighting, and general electrical repair and troubleshooting, work that should never be left to a handyman. Every job follows current electrical code and is backed by our Lifetime Limited Warranty.',
+    warningSigns: [
+      'Flickering or dimming lights',
+      'Warm outlets or faceplates',
+      'Breakers that trip for no clear reason',
+      'Sparking or glowing outlets',
+      'Burning or metallic odors near the panel',
+    ],
     icon: 'electrical',
     heroImage: 'image-22.jpg.webp',
   },
@@ -87,7 +132,24 @@ export const services: Service[] = [
     description: 'Heat pumps deliver efficient heating and cooling from a single system. Sunset installs Daikin and other top-tier heat pumps sized correctly for Oregon’s climate, with financing and flat-rate pricing available.' },
   { slug: 'heat-pump-repair', name: 'Heat Pump Repair', category: 'heating', icon: 'heat-pump',
     shortDescription: 'Fast diagnosis and repair for heat pumps that won’t heat, cool, or defrost.',
-    description: 'From a frozen outdoor unit to a system that won’t switch between heating and cooling, Sunset’s NATE-certified techs diagnose and repair heat pump issues quickly, backed by our Lifetime Limited Warranty on the work performed.' },
+    description: 'In Portland’s rainy winters and warm summers, a working heat pump is essential for maintaining comfort. From a frozen outdoor unit to a system that won’t switch between heating and cooling, Sunset’s NATE-certified techs diagnose and repair heat pump issues quickly, backed by our Lifetime Limited Warranty on the work performed.',
+    signs: [
+      'Unusual noises, grinding, rattling, or squealing',
+      'Inconsistent heating or cooling performance',
+      'Unexplained increases in energy bills',
+      'Frequent on-off cycling ("short cycling")',
+      'Excessive ice buildup during colder months',
+      'System is over 10 years old and needs frequent repairs',
+      'Deteriorating indoor air quality',
+    ],
+    benefits: [
+      'Enhanced system efficiency and lower utility costs',
+      'Extended heat pump lifespan through early issue detection',
+      'Consistent home comfort year-round',
+      'Prevention of larger, costlier problems down the line',
+      'Improved safety by addressing electrical or refrigerant issues',
+      'Better indoor air quality through proper filtration',
+    ] },
   { slug: 'heat-pump-maintenance', name: 'Heat Pump Maintenance', category: 'heating', icon: 'heat-pump-1',
     shortDescription: 'Seasonal tune-ups that keep heat pumps efficient in both heating and cooling mode.',
     description: 'Because heat pumps run year-round, regular maintenance matters even more. Sunset’s tune-ups check refrigerant levels, electrical connections, and defrost cycles to keep your system efficient in every season.' },
@@ -154,7 +216,21 @@ export const services: Service[] = [
     description: 'A burst pipe, overflowing toilet, or sewage backup does not wait for business hours, and neither does Sunset. Our emergency plumbing team is available 24/7 across Portland and Dallas, OR, with flat-rate pricing agreed before any work starts, so you know the cost even in a crisis.' },
   { slug: 'water-heaters', name: 'Water Heaters', category: 'plumbing', featured: true, icon: 'water-heater',
     shortDescription: 'Water heater repair, replacement, and installation, gas, electric, and tankless.',
-    description: 'Whether it’s a leaking tank or you’re ready to upgrade, Sunset repairs and installs gas, electric, and tankless water heaters with flat-rate pricing and a Lifetime Limited Warranty.' },
+    description: 'Whether it’s a leaking tank or you’re ready to upgrade, Sunset repairs and installs gas, electric, and tankless water heaters with flat-rate pricing and a Lifetime Limited Warranty, including 24/7 emergency water heater repair.',
+    signs: [
+      'Insufficient hot water, or water that never reaches the desired temperature',
+      'Strange noises like banging or popping from the tank',
+      'Discolored or rust-colored water suggesting internal corrosion',
+      'Visible leaks around the unit',
+    ],
+    benefits: [
+      'Tank water heaters, conventional models in various sizes, powered by electricity, gas, or propane',
+      'Tankless water heaters that provide hot water on demand without a storage tank',
+      'Boiler-heater combo units serving dual heating purposes',
+      'Condensing water heaters that capture waste gas heat for energy efficiency',
+      'Solar water heaters for reduced energy costs',
+      'Annual maintenance including anode rod inspection and tank flushing',
+    ] },
   { slug: 'tankless-water-heaters', name: 'Tankless Water Heaters', category: 'plumbing', featured: true, icon: 'tankless-water-heater',
     shortDescription: 'Endless hot water and lower energy bills with a tankless system.',
     description: 'Tankless water heaters heat water on demand instead of storing it, saving space and energy. Sunset installs and services tankless systems from leading manufacturers.' },
@@ -231,13 +307,36 @@ export const services: Service[] = [
     description: 'Flickering lights, dead outlets, or a breaker that keeps tripping are all signs of an underlying electrical issue. Sunset’s licensed electricians diagnose and repair the root cause, not just the symptom.' },
   { slug: 'panel-upgrade', name: 'Panel Upgrades', category: 'electrical', featured: true, icon: 'electrical-panel',
     shortDescription: 'Electrical panel upgrades for older or undersized systems.',
-    description: 'An outdated or undersized electrical panel can’t safely support a modern home’s power needs. Sunset upgrades panels to safely handle EV chargers, HVAC systems, and more.' },
+    description: 'An outdated or undersized electrical panel can’t safely support a modern home’s power needs. Sunset’s certified electricians replace aging panels with modern circuit breaker load centers, properly sized for HVAC systems, smart home technology, and EV charging. Typical Portland-area panel upgrades run $2,500 to $4,000, final pricing depends on service entrance size, panel location, and any code compliance work needed, confirmed upfront before we start.',
+    signs: [
+      'Frequent tripped breakers during minor appliance use',
+      'Scorched or burnt outlets and faceplates',
+      'Flickering or dimming lights, especially when large appliances cycle on',
+      'Tingling sensations or mild shocks from switches and outlets',
+      'Burnt odors or visible smoke from the panel',
+      'A home over 25-30 years old still running on a fuse panel instead of circuit breakers',
+    ],
+    process: [
+      'Comprehensive evaluation of your existing electrical infrastructure',
+      'Site preparation, including permits and utility marking',
+      'Safe disconnection of the outdated panel',
+      'Installation of the new enclosure with proper grounding',
+      'Systematic re-routing of branch circuits',
+      'Comprehensive testing and labeling of every circuit',
+      'Final walkthrough and cleanup',
+    ] },
   { slug: 'circuit-breakers', name: 'Circuit Breakers', category: 'electrical', icon: 'electrical-panel',
     shortDescription: 'Circuit breaker repair and replacement.',
     description: 'A breaker that won’t reset or trips repeatedly needs a licensed electrician’s attention. Sunset diagnoses and replaces faulty circuit breakers.' },
   { slug: 'switches-outlets', name: 'Switches & Outlets', category: 'electrical', icon: 'outlet',
     shortDescription: 'Switch and outlet repair, replacement, and installation.',
-    description: 'From a dead outlet to adding new circuits for a home office, Sunset installs and repairs switches and outlets throughout your home.' },
+    description: 'From a dead outlet to adding new circuits for a home office, Sunset installs and repairs switches and outlets throughout your home. A faceplate that’s hot to the touch, an outlet with no power, or one that sparks or glows are all signs it needs a licensed electrician’s attention, not a DIY fix.',
+    benefits: [
+      'USB outlets for direct device charging without a bulky adapter',
+      'AFCI outlets that protect against electrical arcs',
+      'TRR (tamper-resistant) outlets that keep small objects from being inserted',
+      'GFCI outlets that monitor voltage and shut off to prevent shock near water',
+    ] },
   { slug: 'indoor-lighting', name: 'Indoor Lighting', category: 'electrical', icon: 'lighting',
     shortDescription: 'Indoor lighting design and installation.',
     description: 'Sunset installs recessed, pendant, and accent lighting to update the look and function of any room.' },
@@ -249,7 +348,14 @@ export const services: Service[] = [
     description: 'Sunset installs ceiling fans with proper electrical support and, where needed, adds new switch wiring for fan/light control.' },
   { slug: 'ev-charger-installation', name: 'EV Charger Installation', category: 'electrical', featured: true, icon: 'ev-charger',
     shortDescription: 'Home EV charger installation, sized to your panel.',
-    description: 'Sunset installs Level 2 EV chargers at home, including any panel upgrade needed to support the added load safely.' },
+    description: 'Sunset installs Level 2 EV chargers at home, including any panel upgrade needed to support the added load safely. A Level 2 charger delivers 12 to 60 miles of range per hour, compared to just 3 to 5 miles per hour from a standard Level 1 wall outlet.',
+    process: [
+      'Site evaluation of your electrical panel, amperage capacity, and routing options',
+      'Circuit installation, running a dedicated 240V circuit with proper cabling and conduit',
+      'Charger mounting at the optimal location, typically the garage',
+      'System testing, full activation and performance monitoring',
+      'User setup, a walkthrough of charger operation and any mobile app features',
+    ] },
   { slug: 'generator', name: 'Generators', category: 'electrical', featured: true, icon: 'generator',
     shortDescription: 'Standby generator installation for whole-home backup power.',
     description: 'A standby generator keeps your home powered through outages. Sunset installs and services whole-home backup generators with automatic transfer switches.' },

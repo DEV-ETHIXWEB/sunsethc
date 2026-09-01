@@ -52,7 +52,7 @@ const coreEntries: KBEntry[] = [
   {
     id: 'membership',
     keywords: ['membership', 'maintenance plan', 'plan', 'tune up plan', 'annual plan'],
-    answer: `The ${business.membership.name} starts at ${business.membership.startingPrice} and includes priority scheduling and regular tune-ups.`,
+    answer: `The ${business.membership.name} is ${business.membership.price} and includes 4 home visits a year, priority scheduling, a waived service fee, and 15% off repairs.`,
     link: { label: 'View membership plans', href: '/membership-program' },
   },
   {
@@ -280,7 +280,7 @@ export const chatMenu: MenuBranch = {
     },
     {
       label: 'Membership Program',
-      answer: `Starts at ${business.membership.startingPrice}, with priority scheduling and regular tune-ups.`,
+      answer: `The ${business.membership.name} is ${business.membership.price}: 4 home visits a year, priority scheduling, a waived service fee, and 15% off repairs.`,
       link: { label: 'View membership plans', href: '/membership-program' },
     },
     {

@@ -20,13 +20,17 @@ const values = [
   { title: 'Family-run culture', copy: 'A team-first environment, not a faceless franchise.' },
 ];
 
+// Real, currently-listed openings from the live /career-opportunities/
+// page (crawled 2026-09-01), with the real descriptive text for each.
 const roles = [
-  'HVAC Installation & Service Technicians',
-  'Licensed Plumbers',
-  'Licensed Electricians',
-  'Apprentices & Trade School Graduates',
-  'Dispatch & Customer Service',
+  { title: 'HVAC Installer', copy: 'Experienced HVAC installers who have great customer service skills and are able to work with all HVAC brands.' },
+  { title: 'Electrician', copy: 'Certified electricians with excellent customer service skills.' },
+  { title: 'HVAC Service Technician', copy: 'Knowledgeable in troubleshooting HVAC issues, able to repair all brands, with a focus on customer service.' },
+  { title: 'HVAC Sales', copy: 'Experienced salespersons with excellent customer service skills and knowledge of HVAC.' },
+  { title: 'Ductless Heat Pump Specialist', copy: 'Strong leadership and the ability to coordinate day-to-day operations.' },
 ];
+
+const applyUrl = 'https://careers-sunsethc.icims.com/';
 
 const whatWeLookFor = [
   'A valid trade license or willingness to work toward one, apprentices welcome.',
@@ -63,9 +67,10 @@ const benefits = [
   <section class="py-16">
     <Container class="flex flex-col gap-10">
       <p class="reveal-item mx-auto max-w-2xl text-center text-ink-600">
-        Sunset has been a Portland-area employer for over a century, long enough to know that a company is only
-        as good as the people wearing its uniform. We hire technicians who take pride in the work, treat every
-        home like it’s their own, and want a career in the trades, not just a job between other jobs.
+        “At Sunset Heating & Cooling, we like to think of our team as a family, and we are a family that is
+        always growing.” We’re an Equal Opportunity Employer offering a quality working environment and a
+        comprehensive benefits package to technicians who take pride in the work and treat every home like it’s
+        their own.
       </p>
       <div class="reveal-group grid grid-cols-1 gap-5 sm:grid-cols-3">
         {values.map((v) => (
@@ -76,18 +81,28 @@ const benefits = [
         ))}
       </div>
 
-      <div class="grid grid-cols-1 gap-10 lg:grid-cols-3">
-        <div class="reveal-item">
-          <h2 class="mb-4 font-display text-xl font-bold text-ink-900">Roles We Regularly Hire For</h2>
-          <ul class="flex flex-col gap-2">
-            {roles.map((r) => (
-              <li class="flex items-start gap-2 text-sm text-ink-600">
-                <svg viewBox="0 0 20 20" class="mt-0.5 h-4 w-4 shrink-0 text-brand-600" fill="currentColor" aria-hidden="true"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0l-3.5-3.5a1 1 0 1 1 1.4-1.4l2.8 2.8 6.8-6.8a1 1 0 0 1 1.4 0z"/></svg>
-                {r}
-              </li>
-            ))}
-          </ul>
+      <div class="reveal-item">
+        <h2 class="mb-4 text-center font-display text-xl font-bold text-ink-900">Current Openings</h2>
+        <div class="reveal-group grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {roles.map((r) => (
+            <div class="reveal-item rounded-lg border border-ink-100 bg-white p-5 shadow-sm">
+              <h3 class="font-display text-sm font-bold text-ink-900">{r.title}</h3>
+              <p class="mt-1.5 text-sm text-ink-500">{r.copy}</p>
+            </div>
+          ))}
+          <a
+            href={applyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-brand-300 bg-brand-50 p-5 text-center transition-colors hover:bg-brand-100"
+          >
+            <span class="font-display text-sm font-bold text-brand-700">Apply Online</span>
+            <span class="text-xs text-brand-600">via our careers portal &rarr;</span>
+          </a>
         </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
         <div class="reveal-item">
           <h2 class="mb-4 font-display text-xl font-bold text-ink-900">What We Look For</h2>
           <ul class="flex flex-col gap-2">
@@ -114,13 +129,18 @@ const benefits = [
 
       <div class="reveal-item mx-auto max-w-xl text-center">
         <p class="text-ink-600">
-          Interested in joining Sunset? Send your resume and a bit about your background to
+          Ready to apply? Use the careers portal above, send your resume to
           <a href={`mailto:${business.email}`} class="font-semibold text-brand-600 hover:text-brand-700"> {business.email}</a>,
-          or call us to ask about current openings.
+          or give us a call today to inquire about current openings.
         </p>
-        <a href={business.phone.href} class="mt-5 inline-block rounded-md bg-brand-600 px-6 py-3 font-display font-semibold text-white hover:bg-brand-700">
-          Call {business.phone.display}
-        </a>
+        <div class="mt-5 flex flex-wrap justify-center gap-3">
+          <a href={applyUrl} target="_blank" rel="noopener noreferrer" class="inline-block rounded-md bg-brand-600 px-6 py-3 font-display font-semibold text-white hover:bg-brand-700">
+            Apply Online
+          </a>
+          <a href={business.phone.href} class="inline-block rounded-md border-2 border-brand-200 px-6 py-3 font-display font-semibold text-brand-700 hover:bg-brand-50">
+            Call {business.phone.display}
+          </a>
+        </div>
       </div>
     </Container>
   </section>

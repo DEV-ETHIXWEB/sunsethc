@@ -54,6 +54,37 @@ const schema = [breadcrumbListSchema(breadcrumbs, siteUrl), faqPageSchema(faqs)]
         {cat.intro}
       </p>
 
+      {(cat.warningSigns || cat.commonProblems) && (
+        <div class="reveal-group mx-auto mb-12 grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2">
+          {cat.commonProblems && (
+            <div class="reveal-item rounded-xl border border-ink-100 bg-ink-50 p-6">
+              <h2 class="mb-3 font-display text-base font-bold text-ink-900">Common {cat.name} Problems We Fix</h2>
+              <ul class="flex flex-col gap-2">
+                {cat.commonProblems.map((p) => (
+                  <li class="flex items-start gap-2 text-sm text-ink-600">
+                    <svg viewBox="0 0 20 20" class="mt-0.5 h-4 w-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 6v5M10 14h.01" stroke-linecap="round" /><path d="M8.6 3.5 1.9 15a1.5 1.5 0 0 0 1.3 2.2h13.6a1.5 1.5 0 0 0 1.3-2.2L11.4 3.5a1.5 1.5 0 0 0-2.8 0Z" stroke-linejoin="round" /></svg>
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {cat.warningSigns && (
+            <div class="reveal-item rounded-xl border border-ink-100 bg-ink-50 p-6">
+              <h2 class="mb-3 font-display text-base font-bold text-ink-900">Signs You Need {cat.name} Service</h2>
+              <ul class="flex flex-col gap-2">
+                {cat.warningSigns.map((s) => (
+                  <li class="flex items-start gap-2 text-sm text-ink-600">
+                    <svg viewBox="0 0 20 20" class="mt-0.5 h-4 w-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 6v5M10 14h.01" stroke-linecap="round" /><path d="M8.6 3.5 1.9 15a1.5 1.5 0 0 0 1.3 2.2h13.6a1.5 1.5 0 0 0 1.3-2.2L11.4 3.5a1.5 1.5 0 0 0-2.8 0Z" stroke-linejoin="round" /></svg>
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
       <div class="reveal-group grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {categoryServices.map((service) => (
           <a

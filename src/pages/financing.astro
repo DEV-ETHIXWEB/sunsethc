@@ -18,6 +18,10 @@ const breadcrumbs = [
 
 const financingFaqs = [
   {
+    question: 'Who are Sunset’s financing partners?',
+    answer: `Sunset works with ${business.financing.partners.join(', ')} to offer financing on qualifying projects, so you can pick the option that fits your situation best.`,
+  },
+  {
     question: 'What can I finance through Sunset?',
     answer: 'Financing is generally available for larger installations and replacements, furnaces, heat pumps, AC systems, water heaters, panel upgrades, and similar projects, rather than small individual repairs. Ask about your specific project when you request an estimate.',
   },
@@ -30,18 +34,16 @@ const financingFaqs = [
     answer: 'Financing decisions are typically fast, often the same day, so a financed installation does not have to mean a long wait before work can start.',
   },
   {
-    question: 'Can I combine financing with current coupons or specials?',
-    answer: 'In many cases, yes. Mention any current offer when you apply and our team will confirm what applies to your project.',
+    question: 'Is there a discount for first-time customers?',
+    answer: business.financing.promo,
   },
 ];
 
+// TODO: VERIFY before launch, confirm current rates/terms for each partner
+// with the client. Partner names and the first-time promo are real,
+// confirmed from the live /financing/ page (crawled 2026-09-01); specific
+// interest rates and term lengths aren’t published on that page either.
 const schema = [breadcrumbListSchema(breadcrumbs, siteUrl), faqPageSchema(financingFaqs)];
-
-// TODO: VERIFY before launch, confirm the specific financing partner name,
-// rates, and terms with the client and update the copy below accordingly.
-// The source site links out to a financing application without publishing
-// on-page terms, so nothing specific is asserted here beyond what’s
-// generally true of how financing works.
 ---
 
 <Layout>
@@ -77,6 +79,28 @@ const schema = [breadcrumbListSchema(breadcrumbs, siteUrl), faqPageSchema(financ
       <div class="flex justify-center gap-4">
         <Button href={business.phone.href} variant="primary" size="lg">Call {business.phone.display}</Button>
         <Button href="/contact" variant="ghost" size="lg" class="border-2 border-brand-200">Ask About Financing</Button>
+      </div>
+    </Container>
+  </section>
+
+  <section class="pb-16">
+    <Container class="mx-auto flex max-w-2xl flex-col gap-4 rounded-xl border-2 border-dashed border-gold-500/50 bg-gold-500/5 p-8 text-center">
+      <span class="mx-auto rounded-full bg-gold-500 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-950">First-time customers</span>
+      <p class="text-ink-700">{business.financing.promo}</p>
+    </Container>
+  </section>
+
+  <section class="bg-ink-50 py-16">
+    <Container class="mx-auto flex max-w-2xl flex-col gap-6 text-center">
+      <h2 class="font-display text-2xl font-bold text-ink-900">Financing Partners</h2>
+      <p class="text-ink-600">
+        We work with more than one lender so you can compare options rather than take whatever a single financing
+        company offers. Ask which fits your project when you call.
+      </p>
+      <div class="flex flex-wrap justify-center gap-3">
+        {business.financing.partners.map((p) => (
+          <span class="rounded-full border border-ink-200 bg-white px-5 py-2.5 font-display text-sm font-bold text-ink-800">{p}</span>
+        ))}
       </div>
     </Container>
   </section>

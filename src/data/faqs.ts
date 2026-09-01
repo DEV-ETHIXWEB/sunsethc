@@ -83,6 +83,16 @@ export const categoryFaqs: Record<string, FAQItem[]> = {
       answer:
         'Every 1 to 3 months during heavy use, more often if you have pets or allergies. A clogged filter restricts airflow and makes your system work harder than it needs to.',
     },
+    {
+      question: 'What are the signs of a burnt or weak heat pump capacitor?',
+      answer:
+        'A clicking or humming sound when the unit tries to start, an outdoor fan that won’t spin, a brief startup followed by shutdown, and rising energy bills without more use are all common signs. In more advanced cases you may notice a burning or metallic smell, a tripped breaker when the system starts, or visible bulging on the capacitor itself. Capacitor replacement involves live electrical components and correct voltage/microfarad ratings, it’s not a safe DIY repair.',
+    },
+    {
+      question: 'Why won’t my heat pump defrost?',
+      answer:
+        'The most common causes are a faulty defrost control board or sensor, restricted airflow around the outdoor unit from leaves or debris, low refrigerant from a leak, or incorrect thermostat settings. Clearing debris and keeping about two feet of clearance around the outdoor unit resolves it in some cases, but sensor, board, and refrigerant issues need a professional diagnosis.',
+    },
   ],
   'air-conditioning': [
     {

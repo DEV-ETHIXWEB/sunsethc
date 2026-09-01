@@ -83,6 +83,27 @@ export const business = {
   guarantee:
     'Sunset backs every heating, cooling, plumbing, and electrical job with a Lifetime Limited Warranty, flat-rate pricing agreed before work starts, and 24/7 emergency availability.',
 
+  // Verbatim from the live site’s About page (crawled 2026-09-01).
+  philosophy:
+    'Superior service, built on trust. Maintaining comfort is about more than just fixing a system, it’s about building long-term relationships founded on reliability, transparency, and integrity.',
+
+  // Real, named list from the live About page, not a generic substitute.
+  // Several carry conditions the live page marks with an asterisk but
+  // doesn’t spell out in the crawled text, kept here as TODO: VERIFY so the
+  // exact fine print gets confirmed with the client before launch.
+  ironcladGuarantees: [
+    { name: '100% Money Back Guarantee', detail: 'Not satisfied with the work? We’ll make it right or refund you.', condition: false },
+    { name: 'Comfort Guarantee', detail: 'Your system is guaranteed to keep your home comfortable, or we’ll fix it.', condition: false },
+    { name: 'No Surprises Guarantee', detail: 'Flat-rate pricing agreed to before any work begins, no hidden fees.', condition: false },
+    { name: 'Installation Date Guarantee', detail: '$500 back if we miss your scheduled installation date.', condition: true },
+    { name: 'Peace of Mind Guarantee', detail: 'Every technician is background-checked and drug-tested before stepping into your home.', condition: false },
+    { name: 'Property Protection Guarantee', detail: 'We treat your home with the same care we’d want in our own.', condition: false },
+    { name: 'Utility Savings Guarantee', detail: 'If your promised utility savings aren’t met, we’ll refund double the difference.', condition: true },
+    { name: 'No Frustration Guarantee', detail: '24-hour response or $500 back.', condition: true },
+    { name: 'No Lemon Guarantee', detail: 'Compressor failure covered with replacement.', condition: true },
+    { name: 'Lifetime Thermostat Guarantee', detail: 'Your thermostat, covered for as long as you own your home.', condition: true },
+  ],
+
   partners: [
     { name: 'Daikin Comfort Pro', logo: 'daikin-1.png.webp' },
     { name: 'RUUD Pro', logo: 'ruud-pro-1.png.webp' },
@@ -106,17 +127,36 @@ export const business = {
     profileUrl: 'https://www.bbb.org/us/or/portland/profile/heating-and-air-conditioning/sunset-heating-cooling',
   },
 
+  // Real partner names confirmed from the live /financing/ page (crawled
+  // 2026-09-01), not a generic placeholder list.
   financing: {
-    partner: 'Financing available',
-    // TODO: VERIFY, confirm the financing partner name/link before launch;
-    // the live site links to a financing application but the partner brand
-    // wasn’t confirmed during the crawl.
+    partners: ['Service Finance', 'GoodLeap', 'Wells Fargo'],
+    promo: '$50 off for first-time customers on repair charges (not valid on service plans, trip charges, or diagnostic charges).',
     applyUrl: '/financing',
   },
 
+  // "Get Smart Membership" is the live site’s actual named plan
+  // (/membership-program/, crawled 2026-09-01), $19.99/mo or $239/yr with
+  // a specific benefits list. Several other real pages (the homepage,
+  // /heating/, water heater and EV charger service pages) instead advertise
+  // an older "$16.50/month" entry-tier teaser that the dedicated membership
+  // page itself no longer shows; both figures are genuinely live on the
+  // real site, kept here as `legacyStartingPrice` so page copy can match
+  // whichever the real site shows in that context rather than picking one
+  // and silently dropping the other. TODO: VERIFY which is current pricing
+  // with the client before launch.
   membership: {
-    name: 'Sunset Membership Program',
-    startingPrice: '$16.50/month for one unit',
+    name: 'Get Smart Membership',
+    price: '$19.99/month or $239/year',
+    legacyStartingPrice: '$16.50/month for one unit',
+    benefits: [
+      '4 home visits per year',
+      'Priority service scheduling',
+      'Waived service fee',
+      '15% off repairs',
+      'Loyalty credits toward future service',
+      'Maintained system warranties',
+    ],
   },
 
   reviewProfiles: {

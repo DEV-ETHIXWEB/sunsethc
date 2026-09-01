@@ -19,22 +19,6 @@ const breadcrumbs = [
   { name: 'About', url: '/about' },
 ];
 const schema = breadcrumbListSchema(breadcrumbs, siteUrl);
-
-// Sourced verbatim/paraphrased from the live sunsethc.com about page
-// (crawled 2026-09-01), the company’s real origin as a Portland fuel
-// company, not an invented history.
-const guarantees = [
-  'Money-back satisfaction guarantee',
-  'No-surprise, upfront pricing',
-  'Same-day emergency service',
-  'Lifetime Limited Warranty on covered work',
-  'Background-checked, drug-tested technicians',
-  'Clean, uniformed, respectful crews',
-  'On-time arrival or we make it right',
-  'Licensed, bonded & insured on every job',
-  '100% workmanship guarantee',
-  'Honest, straightforward recommendations',
-];
 ---
 
 <Layout>
@@ -49,7 +33,7 @@ const guarantees = [
   <PageHero
     eyebrow="About Sunset"
     title="Over 100 Years of Comfort, Built on Trust"
-    description="From a Portland fuel company to a full-service heating, cooling, plumbing, and electrical provider."
+    description="Rooted in a rich history of service, innovation, and community dedication."
     breadcrumbs={breadcrumbs}
   />
 
@@ -59,15 +43,13 @@ const guarantees = [
         <h2 class="font-display text-2xl font-bold text-ink-900">Our Story</h2>
         <p class="text-ink-600 leading-relaxed">
           For over 100 years, Sunset has been a trusted provider of heating and cooling solutions in the Portland
-          area, helping families and businesses stay comfortable throughout every season. Our roots trace back to
-          Sunset Fuel Co., a Portland company that supplied wood, coal, and sawdust for home heating, long before
-          the company expanded into gas furnaces, water heaters, and air conditioning.
+          area, rooted in a rich history of service, innovation, and community dedication. As we look to the
+          future, we’re focused on not only continuing our legacy of exceptional service but also adapting to
+          the evolving needs of our community, with a growing commitment to energy efficiency, sustainability,
+          and advanced technology.
         </p>
         <p class="text-ink-600 leading-relaxed">
-          Today, Sunset Heating &amp; Cooling serves Portland, Dallas, and the surrounding region with the same
-          principle that’s guided the company since its earliest days: superior service, built on trust. We
-          believe that maintaining the comfort of our customers is about more than just fixing a system, it’s
-          about building long-term relationships founded on reliability, transparency, and integrity.
+          {business.philosophy}
         </p>
       </div>
       <Image src={historyImage} alt="Sunset Heating & Cooling, over 100 years of service" class="reveal-item rounded-xl object-cover shadow-lg" />
@@ -81,13 +63,19 @@ const guarantees = [
         <h2 class="mt-2 font-display text-2xl font-bold text-ink-900 sm:text-3xl">10 Ironclad Guarantees</h2>
       </div>
       <div class="reveal-group grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {guarantees.map((g) => (
+        {business.ironcladGuarantees.map((g) => (
           <div class="reveal-item flex items-start gap-3 rounded-lg border border-ink-100 bg-white p-4">
             <svg viewBox="0 0 20 20" class="mt-0.5 h-5 w-5 shrink-0 text-brand-600" fill="currentColor" aria-hidden="true"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0l-3.5-3.5a1 1 0 1 1 1.4-1.4l2.8 2.8 6.8-6.8a1 1 0 0 1 1.4 0z"/></svg>
-            <p class="text-sm font-medium text-ink-700">{g}</p>
+            <div>
+              <p class="text-sm font-bold text-ink-800">{g.name}{g.condition && <span class="text-ink-400">*</span>}</p>
+              <p class="mt-0.5 text-xs text-ink-500">{g.detail}</p>
+            </div>
           </div>
         ))}
       </div>
+      <p class="reveal-item mx-auto max-w-2xl text-center text-xs text-ink-400">
+        *Conditions apply based on service tier, ask our team for full details when you request service.
+      </p>
     </Container>
   </section>
 
