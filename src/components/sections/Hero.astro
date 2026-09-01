@@ -1,20 +1,20 @@
 ---
-// No background photo here on purpose: the only real site photo available
-// for this spot (bg-home-page-new.webp, 1280x960) is well under the width
-// this hero renders at on any modern desktop, it would look visibly soft
-// stretched full-bleed. A gradient reads as more premium than a blurry
-// upscaled photo, so this stays photo-free until a genuinely high-res
-// asset exists for it.
+import { Image } from 'astro:assets';
+import heroImage from '../../assets/photos/bg-home-page-new.webp';
 import { business } from '../../data/business';
 import Button from '../ui/Button.astro';
 import Container from '../ui/Container.astro';
 import HeroLeadForm from '../forms/HeroLeadForm';
 ---
 
-<section class="relative overflow-hidden bg-gradient-to-br from-brand-950 via-brand-900 to-brand-950">
-  <div class="pointer-events-none absolute inset-0 [background-image:radial-gradient(circle,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:22px_22px]"></div>
-  <div class="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-gold-500/10 blur-3xl"></div>
-  <div class="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-accent-400/10 blur-3xl"></div>
+<section class="relative overflow-hidden bg-brand-950">
+  <Image
+    src={heroImage}
+    alt="Sunset Heating & Cooling technician van and crew"
+    class="absolute inset-0 h-full w-full object-cover opacity-40"
+    loading="eager"
+  />
+  <div class="absolute inset-0 bg-gradient-to-t from-brand-950 via-brand-950/85 to-brand-900/60"></div>
 
   <Container class="relative grid grid-cols-1 items-center gap-10 py-20 lg:grid-cols-[1.15fr_1fr] lg:gap-8">
     <div class="flex min-h-[24rem] flex-col justify-center gap-6 lg:min-h-[34rem]">
