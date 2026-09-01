@@ -30,7 +30,8 @@ const lastUpdated = 'September 1, 2026';
   <PageHero eyebrow="Legal" title="Privacy Policy" description={`Last updated ${lastUpdated}`} breadcrumbs={breadcrumbs} />
 
   <section class="py-16">
-    <Container class="mx-auto flex max-w-2xl flex-col gap-8 text-sm leading-relaxed text-ink-600">
+    <Container>
+    <div class="mx-auto flex max-w-2xl flex-col gap-8 text-sm leading-relaxed text-ink-600">
       <p>
         {business.legalName} ("Sunset," "we," "us," or "our") respects your privacy and is committed to protecting
         it through this Privacy Policy. This policy describes the types of information we may collect from you or
@@ -126,6 +127,7 @@ const lastUpdated = 'September 1, 2026';
           or by mail to {business.locations.portland.street}, {business.locations.portland.city}, {business.locations.portland.state} {business.locations.portland.zip}.
         </p>
       </div>
+    </div>
     </Container>
   </section>
 </Layout>

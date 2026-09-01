@@ -15,8 +15,10 @@ const { items = generalFaqs, title = 'Frequently asked questions', eyebrow = 'FA
 ---
 
 <section class:list={['py-20', bg === 'gray' ? 'bg-ink-50' : 'bg-white']}>
-  <Container class="mx-auto flex max-w-3xl flex-col gap-8">
-    <SectionHeading align="center" eyebrow={eyebrow} title={title} />
-    <FAQAccordion client:visible items={items} />
+  <Container>
+    <div class="mx-auto flex max-w-3xl flex-col gap-8">
+      <SectionHeading align="center" eyebrow={eyebrow} title={title} />
+      <FAQAccordion client:visible items={items} />
+    </div>
   </Container>
 </section>

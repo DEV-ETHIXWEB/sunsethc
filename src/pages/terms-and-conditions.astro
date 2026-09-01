@@ -26,7 +26,8 @@ const lastUpdated = 'September 1, 2026';
   <PageHero eyebrow="Legal" title="Terms & Conditions" description={`Last updated ${lastUpdated}`} breadcrumbs={breadcrumbs} />
 
   <section class="py-16">
-    <Container class="mx-auto flex max-w-2xl flex-col gap-8 text-sm leading-relaxed text-ink-600">
+    <Container>
+    <div class="mx-auto flex max-w-2xl flex-col gap-8 text-sm leading-relaxed text-ink-600">
       <p>
         These Terms & Conditions ("Terms") govern your use of sunsethc.com (the "Site"), operated by
         {business.legalName} ("Sunset," "we," "us," or "our"). By using the Site or requesting service from us,
@@ -125,6 +126,7 @@ const lastUpdated = 'September 1, 2026';
           calling <a href={business.phone.href} class="font-semibold text-brand-600">{business.phone.display}</a>.
         </p>
       </div>
+    </div>
     </Container>
   </section>
 </Layout>

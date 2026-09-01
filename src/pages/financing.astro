@@ -63,64 +63,72 @@ const schema = [breadcrumbListSchema(breadcrumbs, siteUrl), faqPageSchema(financ
   />
 
   <section class="py-16">
-    <Container class="mx-auto flex max-w-2xl flex-col gap-5 text-center">
-      <p class="text-ink-600 leading-relaxed">
-        A failed furnace or a home that suddenly needs a panel upgrade rarely arrives on a convenient schedule.
-        Sunset offers financing for qualifying heating, cooling, plumbing, and electrical installations, so a
-        major repair or system replacement doesn’t have to be an all-at-once expense. Our team can walk you
-        through available options and monthly payment estimates when you request an estimate, before any work
-        is scheduled, so there are no surprises either in the price or the payment plan.
-      </p>
-      <p class="text-ink-600 leading-relaxed">
-        Approval is based on your application, not a hard sell in your living room, and you’ll know your monthly
-        payment before you commit to anything. Financing can cover the full project cost, including labor and
-        equipment, so you’re not stuck choosing between the right-sized system and what fits this month’s budget.
-      </p>
-      <div class="flex justify-center gap-4">
-        <Button href={business.phone.href} variant="primary" size="lg">Call {business.phone.display}</Button>
-        <Button href="/contact" variant="ghost" size="lg" class="border-2 border-brand-200">Ask About Financing</Button>
+    <Container>
+      <div class="mx-auto flex max-w-2xl flex-col gap-5 text-center">
+        <p class="text-ink-600 leading-relaxed">
+          A failed furnace or a home that suddenly needs a panel upgrade rarely arrives on a convenient schedule.
+          Sunset offers financing for qualifying heating, cooling, plumbing, and electrical installations, so a
+          major repair or system replacement doesn’t have to be an all-at-once expense. Our team can walk you
+          through available options and monthly payment estimates when you request an estimate, before any work
+          is scheduled, so there are no surprises either in the price or the payment plan.
+        </p>
+        <p class="text-ink-600 leading-relaxed">
+          Approval is based on your application, not a hard sell in your living room, and you’ll know your monthly
+          payment before you commit to anything. Financing can cover the full project cost, including labor and
+          equipment, so you’re not stuck choosing between the right-sized system and what fits this month’s budget.
+        </p>
+        <div class="flex justify-center gap-4">
+          <Button href={business.phone.href} variant="primary" size="lg">Call {business.phone.display}</Button>
+          <Button href="/contact" variant="ghost" size="lg" class="border-2 border-brand-200">Ask About Financing</Button>
+        </div>
       </div>
     </Container>
   </section>
 
   <section class="pb-16">
-    <Container class="mx-auto flex max-w-2xl flex-col gap-4 rounded-xl border-2 border-dashed border-gold-500/50 bg-gold-500/5 p-8 text-center">
-      <span class="mx-auto rounded-full bg-gold-500 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-950">First-time customers</span>
-      <p class="text-ink-700">{business.financing.promo}</p>
+    <Container>
+      <div class="mx-auto flex max-w-2xl flex-col gap-4 rounded-xl border-2 border-dashed border-gold-500/50 bg-gold-500/5 p-8 text-center">
+        <span class="mx-auto rounded-full bg-gold-500 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-950">First-time customers</span>
+        <p class="text-ink-700">{business.financing.promo}</p>
+      </div>
     </Container>
   </section>
 
   <section class="bg-ink-50 py-16">
-    <Container class="mx-auto flex max-w-2xl flex-col gap-6 text-center">
-      <h2 class="font-display text-2xl font-bold text-ink-900">Financing Partners</h2>
-      <p class="text-ink-600">
-        We work with more than one lender so you can compare options rather than take whatever a single financing
-        company offers. Ask which fits your project when you call.
-      </p>
-      <div class="flex flex-wrap justify-center gap-3">
-        {business.financing.partners.map((p) => (
-          <span class="rounded-full border border-ink-200 bg-white px-5 py-2.5 font-display text-sm font-bold text-ink-800">{p}</span>
-        ))}
+    <Container>
+      <div class="mx-auto flex max-w-2xl flex-col gap-6 text-center">
+        <h2 class="font-display text-2xl font-bold text-ink-900">Financing Partners</h2>
+        <p class="text-ink-600">
+          We work with more than one lender so you can compare options rather than take whatever a single financing
+          company offers. Ask which fits your project when you call.
+        </p>
+        <div class="flex flex-wrap justify-center gap-3">
+          {business.financing.partners.map((p) => (
+            <span class="rounded-full border border-ink-200 bg-white px-5 py-2.5 font-display text-sm font-bold text-ink-800">{p}</span>
+          ))}
+        </div>
       </div>
     </Container>
   </section>
 
   <section class="py-16">
-    <Container class="mx-auto grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-3">
-      <div class="reveal-item flex flex-col gap-2 text-center">
-        <span class="mx-auto font-display text-3xl font-extrabold text-ink-100">1</span>
-        <h3 class="font-display text-sm font-bold text-ink-900">Get your estimate</h3>
-        <p class="text-sm text-ink-500">A technician diagnoses the issue and gives you flat-rate pricing for the fix or replacement.</p>
-      </div>
-      <div class="reveal-item flex flex-col gap-2 text-center">
-        <span class="mx-auto font-display text-3xl font-extrabold text-ink-100">2</span>
-        <h3 class="font-display text-sm font-bold text-ink-900">Apply in minutes</h3>
-        <p class="text-sm text-ink-500">Our team walks you through the application and typical approval turnaround on the spot.</p>
-      </div>
-      <div class="reveal-item flex flex-col gap-2 text-center">
-        <span class="mx-auto font-display text-3xl font-extrabold text-ink-100">3</span>
-        <h3 class="font-display text-sm font-bold text-ink-900">We get to work</h3>
-        <p class="text-sm text-ink-500">Once approved, we schedule the job, often the same week, sometimes the same day.</p>
+    <Container>
+      <div class="mx-auto grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-3">
+        <div class="reveal-item flex flex-col gap-2 text-center">
+          <span class="mx-auto font-display text-3xl font-extrabold text-ink-100">1</span>
+          <h3 class="font-display text-sm font-bold text-ink-900">Get your estimate</h3>
+          <p class="text-sm text-ink-500">A technician diagnoses the issue and gives you flat-rate pricing for the fix or replacement.</p>
+        </div>
+        <div class="reveal-item flex flex-col gap-2 text-center">
+          <span class="mx-auto font-display text-3xl font-extrabold text-ink-100">2</span>
+          <h3 class="font-display text-sm font-bold text-ink-900">Apply in minutes</h3>
+          <p class="text-sm text-ink-500">Our team walks you through the application and typical approval turnaround on the spot.</p>
+        </div>
+        <div class="reveal-item flex flex-col gap-2 text-center">
+          <span class="mx-auto font-display text-3xl font-extrabold text-ink-100">3</span>
+          <h3 class="font-display text-sm font-bold text-ink-900">We get to work</h3>
+          <p class="text-sm text-ink-500">Once approved, we schedule the job, often the same week, sometimes the same day.</p>
+        </div>
       </div>
     </Container>
   </section>

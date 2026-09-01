@@ -35,16 +35,18 @@ const schema = breadcrumbListSchema(breadcrumbs, siteUrl);
   />
 
   <section class="py-16">
-    <Container class="mx-auto flex max-w-xl flex-col items-center gap-4 text-center">
-      <p class="text-ink-600">
-        We’re proud of our BBB A+ rating and the relationships we’ve built with customers across Portland and
-        Dallas, OR over more than 100 years in business. A rating is only as good as what’s behind it, so we’d
-        rather you read the actual reviews than take our word for it. Read verified reviews directly from our
-        BBB profile below, or ask any technician on-site for references from recent jobs in your neighborhood.
-      </p>
-      <a href={business.reviewProfiles.bbb} target="_blank" rel="noopener noreferrer" class="rounded-md bg-brand-600 px-6 py-3 font-display font-semibold text-white hover:bg-brand-700">
-        View Our BBB Profile
-      </a>
+    <Container>
+      <div class="mx-auto flex max-w-xl flex-col items-center gap-4 text-center">
+        <p class="text-ink-600">
+          We’re proud of our BBB A+ rating and the relationships we’ve built with customers across Portland and
+          Dallas, OR over more than 100 years in business. A rating is only as good as what’s behind it, so we’d
+          rather you read the actual reviews than take our word for it. Read verified reviews directly from our
+          BBB profile below, or ask any technician on-site for references from recent jobs in your neighborhood.
+        </p>
+        <a href={business.reviewProfiles.bbb} target="_blank" rel="noopener noreferrer" class="rounded-md bg-brand-600 px-6 py-3 font-display font-semibold text-white hover:bg-brand-700">
+          View Our BBB Profile
+        </a>
+      </div>
     </Container>
   </section>
 

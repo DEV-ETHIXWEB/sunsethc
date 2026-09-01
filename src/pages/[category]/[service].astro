@@ -99,7 +99,7 @@ const schema = [
             <ul class="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {service.signs.map((s) => (
                 <li class="flex items-start gap-2 rounded-lg bg-ink-50 px-3 py-2.5 text-sm text-ink-700">
-                  <svg viewBox="0 0 20 20" class="mt-0.5 h-4 w-4 shrink-0 text-accent-500" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 6v5M10 14h.01" stroke-linecap="round" /><path d="M8.6 3.5 1.9 15a1.5 1.5 0 0 0 1.3 2.2h13.6a1.5 1.5 0 0 0 1.3-2.2L11.4 3.5a1.5 1.5 0 0 0-2.8 0Z" stroke-linejoin="round" /></svg>
+                  <svg viewBox="0 0 20 20" class="mt-0.5 h-4 w-4 shrink-0 text-accent-600" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 6v5M10 14h.01" stroke-linecap="round" /><path d="M8.6 3.5 1.9 15a1.5 1.5 0 0 0 1.3 2.2h13.6a1.5 1.5 0 0 0 1.3-2.2L11.4 3.5a1.5 1.5 0 0 0-2.8 0Z" stroke-linejoin="round" /></svg>
                   {s}
                 </li>
               ))}
@@ -150,7 +150,7 @@ const schema = [
 
       <aside class="reveal-item flex flex-col gap-5">
         <div class="rounded-xl bg-brand-900 p-6 text-white">
-          <h3 class="font-display text-lg font-bold">Need {service.name.toLowerCase()}?</h3>
+          <h3 class="font-display text-lg font-bold text-white">Need {service.name.toLowerCase()}?</h3>
           <p class="mt-2 text-sm text-white/75">Call now for fast, flat-rate {category.name.toLowerCase()} service.</p>
           <Button href={business.phone.href} variant="accent" size="md" class="mt-4 w-full">
             Call {business.phone.display}

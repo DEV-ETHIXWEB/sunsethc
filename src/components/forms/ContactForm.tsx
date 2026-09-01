@@ -2,9 +2,13 @@ import { useState } from 'react';
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
+const services = ['Heating', 'Cooling', 'Plumbing', 'Electrical', 'Other'];
+
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [service, setService] = useState('');
+  const [otherService, setOtherService] = useState('');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -12,7 +16,22 @@ export default function ContactForm() {
     setErrorMessage('');
 
     const form = e.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
+    const formData = new FormData(form);
+
+    // Honeypot: real visitors never see or fill this field. If it's
+    // filled, a bot did it, quietly report success without sending mail.
+    if (formData.get('website')) {
+      setStatus('success');
+      form.reset();
+      return;
+    }
+
+    const finalService = service === 'Other' ? (otherService.trim() || 'Other') : service;
+    const data = {
+      ...Object.fromEntries(formData.entries()),
+      service: finalService,
+    };
+    delete (data as Record<string, unknown>).website;
 
     try {
       const res = await fetch('/api/contact', {
@@ -24,6 +43,8 @@ export default function ContactForm() {
       if (!res.ok) throw new Error(body.error || 'Something went wrong. Please call us instead.');
       setStatus('success');
       form.reset();
+      setService('');
+      setOtherService('');
     } catch (err) {
       setStatus('error');
       setErrorMessage(err instanceof Error ? err.message : 'Something went wrong. Please call us instead.');
@@ -44,27 +65,67 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      {/* Honeypot field: hidden from sighted users and skipped by screen
+          readers, left visible only to form-filling bots. */}
+      <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+        <label htmlFor="contact-website">Leave this field empty</label>
+        <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="name" className="text-sm font-semibold text-ink-700">Full name</label>
-          <input id="name" name="name" type="text" required className="rounded-md border border-ink-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
+          <input id="name" name="name" type="text" required maxLength={200} className="rounded-md border border-ink-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="phone" className="text-sm font-semibold text-ink-700">Phone</label>
-          <input id="phone" name="phone" type="tel" required className="rounded-md border border-ink-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
+          <input id="phone" name="phone" type="tel" required maxLength={40} className="rounded-md border border-ink-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
         </div>
       </div>
       <div className="flex flex-col gap-1.5">
         <label htmlFor="email" className="text-sm font-semibold text-ink-700">Email</label>
-        <input id="email" name="email" type="email" required className="rounded-md border border-ink-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
+        <input id="email" name="email" type="email" required maxLength={200} className="rounded-md border border-ink-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
       </div>
       <div className="flex flex-col gap-1.5">
         <label htmlFor="address" className="text-sm font-semibold text-ink-700">Service address</label>
-        <input id="address" name="address" type="text" className="rounded-md border border-ink-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
+        <input id="address" name="address" type="text" maxLength={300} className="rounded-md border border-ink-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
       </div>
+
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-semibold text-ink-700">What do you need help with?</span>
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Service needed">
+          {services.map((s) => (
+            <button
+              key={s}
+              type="button"
+              aria-pressed={service === s}
+              onClick={() => setService(s === service ? '' : s)}
+              className={
+                'rounded-full border px-4 py-2 text-sm font-semibold transition-colors ' +
+                (service === s
+                  ? 'border-brand-600 bg-brand-600 text-white'
+                  : 'border-ink-200 bg-white text-ink-700 hover:border-brand-300 hover:bg-brand-50')
+              }
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+        {service === 'Other' && (
+          <input
+            type="text"
+            value={otherService}
+            onChange={(e) => setOtherService(e.target.value)}
+            placeholder="Tell us what you need"
+            maxLength={100}
+            className="rounded-md border border-ink-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+          />
+        )}
+      </div>
+
       <div className="flex flex-col gap-1.5">
         <label htmlFor="message" className="text-sm font-semibold text-ink-700">How can we help?</label>
-        <textarea id="message" name="message" rows={4} required className="rounded-md border border-ink-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
+        <textarea id="message" name="message" rows={4} required maxLength={5000} className="rounded-md border border-ink-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
       </div>
 
       {status === 'error' && (

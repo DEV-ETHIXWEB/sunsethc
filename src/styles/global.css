@@ -24,15 +24,21 @@
      used sparingly, so this rebuild follows the same balance. `gold-*` is
      kept as an alias of the same scale since earlier component code refers
      to both names interchangeably. */
+  /* -500 stays a bright, saturated gold, it's used as a background FILL
+     with dark navy text on top (badges like "Featured", "Limited time"),
+     so it needs to stay light, not dark, for contrast. -600/-700/-800 are
+     for the opposite case, gold used AS text color on a white/ink-50
+     background (eyebrow labels, links), and are deliberately darker than a
+     straight tint ramp off #ffcf06 would give, verified to hit >=4.5:1. */
   --color-accent-50: #fffbea;
   --color-accent-100: #fff3c4;
   --color-accent-200: #ffe685;
   --color-accent-300: #ffd94d;
   --color-accent-400: #ffcf06; /* "accent" on the live site, use for badges/highlights */
-  --color-accent-500: #d1a900; /* darker step, for accent text/icons on white */
-  --color-accent-600: #9c7f00;
-  --color-accent-700: #7a6300;
-  --color-accent-800: #5c4a00;
+  --color-accent-500: #d1a900; /* bright gold, safe as a bg fill under dark navy text */
+  --color-accent-600: #735800; /* 6.7:1 on white, 6.3:1 on ink-50, safe as small TEXT */
+  --color-accent-700: #5c4700;
+  --color-accent-800: #453600;
 
   --color-gold-50: #fffbea;
   --color-gold-100: #fff3c4;
@@ -40,8 +46,8 @@
   --color-gold-300: #ffd94d;
   --color-gold-400: #ffcf06;
   --color-gold-500: #d1a900;
-  --color-gold-600: #9c7f00;
-  --color-gold-700: #7a6300;
+  --color-gold-600: #735800;
+  --color-gold-700: #5c4700;
 
   /* Neutrals, anchored on the live site's "shaded" (#67686A) and "smoky"
      (#E5E6EA) tokens. */
@@ -116,6 +122,12 @@
     @apply bg-white text-ink-800 font-sans antialiased;
   }
 
+  /* This tag-selector rule wins over a color inherited from a parent (e.g.
+     a `text-white` wrapper around a dark card), it does NOT win over a
+     color utility on the heading itself. So any heading placed inside a
+     dark-background container needs its own explicit text-white (or
+     equivalent) class, don't rely on inheriting it, or the heading
+     silently renders dark-on-dark. */
   h1, h2, h3, h4, h5, h6 {
     @apply font-display text-ink-900;
   }
