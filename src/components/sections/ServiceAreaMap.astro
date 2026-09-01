@@ -39,6 +39,36 @@ const hub = points.find((p) => p.slug === 'portland')!;
 const spokes = points.filter((p) => p.featured && p.slug !== 'portland');
 const sorted = [...points].sort((a, b) => a.name.localeCompare(b.name));
 
+// The Portland metro cluster packs ~10 featured cities within a few
+// projected units of each other, always-on labels for all of them would
+// overlap into an unreadable mess. Greedily keep only labels that are at
+// least LABEL_MIN_DIST apart (in projected coordinate space), starting
+// from the hub and the most spread-out cities first. Everything else still
+// gets its name on hover/tap (tooltip) and in the searchable list, it just
+// doesn't carry a permanent label on the map itself.
+const LABEL_MIN_DIST = 7;
+const labelPriority = [
+  'portland', 'gresham', 'hillsboro', 'sandy', 'canby', 'tualatin', 'dallas',
+  'salem', 'newberg', 'hood-river', 'vancouver', 'beaverton', 'tigard',
+  'lake-oswego', 'milwaukie', 'happy-valley', 'clackamas', 'oregon-city', 'west-linn',
+];
+const keptLabels: typeof points = [];
+for (const slug of labelPriority) {
+  const p = points.find((pt) => pt.slug === slug);
+  if (!p) continue;
+  const farEnough = keptLabels.every((k) => Math.hypot(p.xPct - k.xPct, p.yPct - k.yPct) >= LABEL_MIN_DIST);
+  if (farEnough) keptLabels.push(p);
+}
+const labeledSlugs = new Set(keptLabels.map((p) => p.slug));
+
+// Point each kept label away from the hub (north of it labels sit above
+// their dot, south of it labels sit below) instead of a naive alternating
+// pattern, so near-vertical neighbors like Portland/Tualatin get pushed
+// apart instead of landing in the same band.
+function labelSide(p: (typeof points)[number]) {
+  return p.yPct <= hub.yPct ? 'above' : 'below';
+}
+
 // Real Oregon + Washington outlines, clipped to the display bounds above
 // and projected into the same 0-100 space. Source: a public US state
 // boundary dataset, simplified and clipped offline.
@@ -129,20 +159,40 @@ const BORDER_PATH =
               href={`/service-areas/${p.slug}`}
               data-region-point={p.region}
               data-city={p.slug}
-              class="map-point group absolute -translate-x-1/2 -translate-y-1/2 focus:z-30 focus:outline-none"
+              class:list={[
+                'map-point group absolute -translate-x-1/2 -translate-y-1/2 focus:z-30 focus:outline-none',
+                labeledSlugs.has(p.slug) ? 'z-10' : 'z-0',
+              ]}
               style={`left:${p.xPct}%; top:${p.yPct}%;`}
               aria-label={`${p.name}, OR, ${p.region} service area`}
             >
               {p.featured && (
-                <span class="pointer-events-none absolute inset-0 -m-1.5 animate-ping rounded-full bg-accent-400/50 [animation-duration:2.5s]"></span>
+                <span class="pointer-events-none absolute inset-0 -m-1.5 animate-ping rounded-full bg-accent-400/50 [animation-duration:2.5s] group-hover:hidden"></span>
               )}
               <span
                 class:list={[
-                  'relative block rounded-full ring-2 ring-brand-950 transition-all duration-200 group-hover:scale-[1.8] group-focus-visible:scale-[1.8]',
+                  'relative block rounded-full ring-2 ring-brand-950 transition-transform duration-300 ease-out will-change-transform group-hover:scale-[1.9] group-focus-visible:scale-[1.9]',
                   p.featured ? (p.slug === 'portland' ? 'h-3.5 w-3.5 bg-accent-400 shadow-md ring-[3px]' : 'h-3 w-3 bg-accent-400 shadow-md') : 'h-1.5 w-1.5 bg-sky-200',
                 ]}
               ></span>
-              <span class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-lg bg-white px-2.5 py-1.5 text-center opacity-0 shadow-xl transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+
+              {/* Always-on mini label, but only for cities spaced far enough
+                  apart (see LABEL_MIN_DIST above) so the dense Portland-metro
+                  cluster doesn't turn into a wall of overlapping text.
+                  Alternated above/below, hidden the moment the full tooltip
+                  below takes over on hover. */}
+              {labeledSlugs.has(p.slug) && (
+                <span
+                  class:list={[
+                    'pointer-events-none absolute left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full bg-brand-950/90 px-1.5 py-[1px] text-[8px] font-bold uppercase tracking-wide text-white/90 shadow-sm ring-1 ring-white/10 transition-opacity duration-200 ease-out group-hover:opacity-0 group-focus-visible:opacity-0',
+                    labelSide(p) === 'below' ? 'top-full mt-1.5' : 'bottom-full mb-1.5',
+                  ]}
+                >
+                  {p.name}
+                </span>
+              )}
+
+              <span class="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 translate-y-1.5 scale-90 whitespace-nowrap rounded-lg bg-white px-2.5 py-1.5 text-center opacity-0 shadow-xl transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:scale-100 group-focus-visible:opacity-100">
                 <span class="block font-display text-xs font-bold text-brand-900">{p.name}</span>
                 <span class="block text-[10px] text-ink-500">{p.region}</span>
                 <span class="absolute left-1/2 top-full -mt-px h-2 w-2 -translate-x-1/2 rotate-45 bg-white"></span>
