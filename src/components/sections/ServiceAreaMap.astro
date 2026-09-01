@@ -160,7 +160,7 @@ const BORDER_PATH =
               data-region-point={p.region}
               data-city={p.slug}
               class:list={[
-                'map-point group absolute -translate-x-1/2 -translate-y-1/2 focus:z-30 focus:outline-none',
+                'map-point group absolute flex h-4 w-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center transition-opacity duration-300 ease-out focus:z-30 focus:outline-none',
                 labeledSlugs.has(p.slug) ? 'z-10' : 'z-0',
               ]}
               style={`left:${p.xPct}%; top:${p.yPct}%;`}
@@ -171,7 +171,7 @@ const BORDER_PATH =
               )}
               <span
                 class:list={[
-                  'relative block rounded-full ring-2 ring-brand-950 transition-transform duration-300 ease-out will-change-transform group-hover:scale-[1.9] group-focus-visible:scale-[1.9]',
+                  'relative block rounded-full ring-2 ring-brand-950 transition-transform duration-200 ease-out will-change-transform group-hover:scale-150 group-focus-visible:scale-150',
                   p.featured ? (p.slug === 'portland' ? 'h-3.5 w-3.5 bg-accent-400 shadow-md ring-[3px]' : 'h-3 w-3 bg-accent-400 shadow-md') : 'h-1.5 w-1.5 bg-sky-200',
                 ]}
               ></span>

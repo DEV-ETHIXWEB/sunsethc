@@ -104,13 +104,6 @@ export const business = {
     { name: 'Lifetime Thermostat Guarantee', detail: 'Your thermostat, covered for as long as you own your home.', condition: true },
   ],
 
-  partners: [
-    { name: 'Daikin Comfort Pro', logo: 'daikin-logo.webp' },
-    { name: 'RUUD Pro', logo: 'ruud-logo.webp' },
-    { name: 'NW Natural', logo: 'nw-natural-logo.webp' },
-    { name: 'NATE Certified', logo: 'nate-logo.webp' },
-  ],
-
   paymentMethods: ['American Express', 'Mastercard', 'Visa', 'Discover'],
 
   social: {
