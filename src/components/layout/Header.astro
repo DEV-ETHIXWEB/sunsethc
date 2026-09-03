@@ -25,11 +25,11 @@ const rightAlignFrom = Math.ceil(mainNav.length / 2);
   </div>
 
   <Container class="site-header__main flex min-w-0 items-center justify-between gap-3 py-3">
-    <a href="/" class="flex h-10 min-w-0 items-center" aria-label={`${business.name} home`}>
+    <a href="/" class="flex h-14 min-w-0 items-center" aria-label={`${business.name} home`}>
       <Logo variant="light" />
     </a>
 
-    <nav class="hidden min-w-0 shrink items-center gap-0.5 xl:flex" aria-label="Primary">
+    <nav class="hidden shrink-0 items-center gap-0.5 xl:flex" aria-label="Primary">
       {mainNav.map((item, index) => (
         <div class="group relative shrink-0">
           <a
