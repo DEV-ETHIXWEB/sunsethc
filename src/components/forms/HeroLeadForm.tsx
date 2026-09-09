@@ -155,7 +155,7 @@ export default function HeroLeadForm() {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="mt-1 inline-flex items-center justify-center rounded-lg bg-accent-400 px-5 py-3 font-display font-semibold text-brand-900 shadow-md transition-colors hover:bg-accent-300 disabled:opacity-60"
+        className="mt-1 inline-flex items-center justify-center rounded-full bg-accent-400 px-5 py-3 font-display font-semibold text-brand-900 shadow-md transition-colors hover:bg-accent-300 disabled:opacity-60"
       >
         {status === 'submitting' ? 'Sending…' : 'Get My Free Quote'}
       </button>
