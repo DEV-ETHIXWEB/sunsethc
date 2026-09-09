@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ServiceIcon } from './ServiceIcon';
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -7,8 +8,12 @@ const services = ['Heating', 'Cooling', 'Plumbing', 'Electrical', 'Other'];
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-  const [service, setService] = useState('');
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [otherService, setOtherService] = useState('');
+
+  function toggleService(s: string) {
+    setSelectedServices((prev) => (prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]));
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -26,7 +31,9 @@ export default function ContactForm() {
       return;
     }
 
-    const finalService = service === 'Other' ? (otherService.trim() || 'Other') : service;
+    const finalService = selectedServices
+      .map((s) => (s === 'Other' ? otherService.trim() || 'Other' : s))
+      .join(', ');
     const data = {
       ...Object.fromEntries(formData.entries()),
       service: finalService,
@@ -43,7 +50,7 @@ export default function ContactForm() {
       if (!res.ok) throw new Error(body.error || 'Something went wrong. Please call us instead.');
       setStatus('success');
       form.reset();
-      setService('');
+      setSelectedServices([]);
       setOtherService('');
     } catch (err) {
       setStatus('error');
@@ -92,26 +99,27 @@ export default function ContactForm() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className="text-sm font-semibold text-ink-700">What do you need help with?</span>
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Service needed">
+        <span className="text-sm font-semibold text-ink-700">What do you need help with? <span className="font-normal text-ink-400">(select all that apply)</span></span>
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Service needed, select all that apply">
           {services.map((s) => (
             <button
               key={s}
               type="button"
-              aria-pressed={service === s}
-              onClick={() => setService(s === service ? '' : s)}
+              aria-pressed={selectedServices.includes(s)}
+              onClick={() => toggleService(s)}
               className={
-                'rounded-full border px-4 py-2 text-sm font-semibold transition-colors ' +
-                (service === s
+                'flex items-center gap-2.5 rounded-2xl border px-5 py-3 text-sm font-semibold transition-colors ' +
+                (selectedServices.includes(s)
                   ? 'border-brand-600 bg-brand-600 text-white'
                   : 'border-ink-200 bg-white text-ink-700 hover:border-brand-300 hover:bg-brand-50')
               }
             >
+              <ServiceIcon name={s} className="h-5 w-5 shrink-0" />
               {s}
             </button>
           ))}
         </div>
-        {service === 'Other' && (
+        {selectedServices.includes('Other') && (
           <input
             type="text"
             value={otherService}

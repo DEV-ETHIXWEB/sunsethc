@@ -12,7 +12,7 @@ import MobileNav from './MobileNav';
 const rightAlignFrom = Math.ceil(mainNav.length / 2);
 ---
 
-<header id="site-header" class="sticky top-0 z-50 border-b border-ink-100 bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/80">
+<header id="site-header" class="sticky top-0 z-50 -mb-[17px] rounded-b-3xl bg-white/95 shadow-sm backdrop-blur supports-backdrop-filter:bg-white/80">
   <div class="site-header__utility hidden bg-brand-900 text-white xl:block">
     <Container class="flex items-center justify-between py-1.5 text-xs">
       <p class="font-medium tracking-wide">
@@ -70,7 +70,7 @@ const rightAlignFrom = Math.ceil(mainNav.length / 2);
       <a
         href={business.phone.href}
         aria-label={`Call ${business.phone.display}`}
-        class="hidden items-center gap-2.5 whitespace-nowrap rounded-full border border-brand-100 bg-gradient-to-b from-brand-50 to-brand-100/60 py-1.5 pl-1.5 pr-4 shadow-sm transition-all hover:border-brand-200 hover:shadow-md sm:flex lg:hidden"
+        class="site-header__phone-pill hidden items-center gap-2.5 whitespace-nowrap rounded-full border border-brand-100 bg-gradient-to-b from-brand-50 to-brand-100/60 py-1.5 pl-1.5 pr-4 shadow-sm transition-all hover:border-brand-200 hover:shadow-md sm:flex lg:hidden"
       >
         <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white shadow-sm">
           <svg viewBox="0 0 20 20" class="h-4 w-4" fill="currentColor" aria-hidden="true">
@@ -89,7 +89,7 @@ const rightAlignFrom = Math.ceil(mainNav.length / 2);
        social links and two pill buttons, a distinctive part of the client's
        actual identity worth keeping rather than flattening into a generic
        template header. -->
-  <div class="site-header__gold hidden bg-gold-400 lg:block">
+  <div class="site-header__gold hidden rounded-b-3xl bg-gold-400 lg:block">
     <Container class="flex items-center justify-between gap-4 py-2.5">
       <div class="flex items-center gap-3.5">
         <a href={business.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="text-brand-900/70 transition-colors hover:text-brand-900">
@@ -145,6 +145,16 @@ const rightAlignFrom = Math.ceil(mainNav.length / 2);
 
   header.is-scrolled .site-header__main {
     padding-block: 0.625rem;
+  }
+
+  /* The gold bar's own phone pill collapses away with it on scroll, so
+     bring back the compact phone pill (normally hidden at lg+ since the
+     gold bar already shows a phone number there) once scrolled, instead
+     of leaving the sticky header with no phone number at all. */
+  @media (min-width: 1024px) {
+    header.is-scrolled .site-header__phone-pill {
+      display: flex;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
